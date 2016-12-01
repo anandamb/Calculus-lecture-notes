@@ -1,0 +1,428 @@
+\documentclass[t]{beamer}
+\usetheme{Warsaw}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+\usepackage{beamerthemesplit}
+\mode<presentation>
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen}
+\usepackage{ifthen}
+\usepackage{animate}
+\usepackage{color}
+\usepackage{type1cm}  % used for watermarking
+\usepackage{eso-pic}  % used for watermarking
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines...
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 13:  Techniques of integration}
+\date{October 29 -- November 2, 2012}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{2}
+\frame{\tableofcontents
+
+\begin{flushright}
+\hyperlink{tues}{\beamergotobutton{Lecture 23}}
+\end{flushright} 
+}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\section{Techniques of integration}
+\subsection{Trigonometric integrals}
+
+\begin{frame}
+\frametitle{Recall from last class}
+\begin{itemize}[<+->]
+\item Integrals of the form \[ \ds\int \sin^mx \cos^nx\,dx.\]
+\begin{itemize}[<+->]
+\item \textbf{$m$ odd:} we save one factor of $\sin x$ and use $\sin^2x=1-\cos^2x$ to express the remaining factors in terms of $\cos x$. Then substitute $u=\cos x$.
+\item \textbf{$n$ odd:} we save one factor of $\cos x$ and use $\cos^2x=1-\sin^2x$ to express the remaining factors in terms of $\sin x$. Then substitute $u=\sin x$.
+\item \textbf{$m$, $n$ both even:} we use the half-angle identities:
+\uncover<+->{\begin{align*}
+\sin^2x&=\tfrac{1}{2}(1-\cos2x)\\
+\cos^2x&=\tfrac{1}{2}(1+\cos2x) \\ 
+\intertext{and progressively lower the powers until the integral can be evaluated. Also use \vspace*{-3mm}}
+\sin x\cos x&=\tfrac{1}{2}\sin2x.
+\end{align*}}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Recall from last class}
+\begin{itemize}[<+->]
+\item Integrals of the form \[ \ds\int \tan^mx \sec^nx\,dx.\]
+\begin{itemize}[<+->]
+\item \textbf{$n$ even:} We save one factor of $\sec^2x$ and use $\sec^2x=1+\tan^2x$ to express the remaining factors in terms of $\tan x$. Then substitute $u=\tan x$.
+\item \textbf{$m$ odd, $n\geq 1$:} We save one factor of $\sec x\tan x$ and use $\tan^2x=\sec^2x-1$ to express the remaining factors in terms of $\sec x$. Then substitute $u=\sec x$.
+\end{itemize}
+\item $\int\tan x\,dx=\ln|\sec x|+C.$
+\item $\int\sec x\,dx=\ln|\sec x+\tan x|+C.$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Recall from last class}
+\newhead{Example}
+Integrate \[\int\tan^5x\dx.\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Trigonometric substitutions}
+
+
+\noindent We now look at integrals of the form $\int \sqrt{a^{2} - x^{2}}\,dx$, where $a>0$.  A good strategy to evaluate this integral is to change variables from $x$ to $\theta$ by using the substitution $x = a\sin\theta$.\pause
+
+\vspace*{.4cm}
+
+\noindent Notice that we are using a slightly different substitution than before.  In a $u$ substitution, the new variable is a function of the old one, $x$, and in this kind of substitution, the old variable $x$ is a function of the new one, $\theta$.\pause
+
+\medskip
+
+\noindent These kind of substitutions are called \emph{inverse} substitutions, and we can make an inverse substitution of the form, for instance $x = a\sin \theta$ as long as it defines a one-to-one function.  We do this by restricting $\theta$ to lie in the interval $[-\frac{\pi}{2},\frac{\pi}{2}]$.
+\end{frame}
+
+\begin{frame}
+\newhead{Table of substitutions}\\
+Here is a list of effective trigonometric substitutions.  Since these substitutions work when $x$ is one-to-one with respect to $\theta$, the table specifies the restricted range of $\theta$.\pause
+\noindent
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|c|c|c|}
+\hline
+Expression & Substitution & Range for $\theta$  \\
+\hline
+$\sqrt{a^2-x^2}$ & $x=a\sin\theta$ & $[-\frac{\pi}{2},\frac{\pi}{2}]$  \\
+$\sqrt{a^2+x^2}$ & $x=a\tan\theta$ & $(-\frac{\pi}{2},\frac{\pi}{2})$  \\
+$\sqrt{x^2-a^2}$ & $x=a\sec\theta$ & $[0,\frac{\pi}{2})\cup[\pi,\frac{3\pi}{2})$  \\
+\hline
+\end{tabular}
+\end{center}\pause
+Now we do lots of examples!
+\end{frame}
+
+\begin{frame}
+\newhead{Example}
+Evaluate $\int\frac{\sqrt{9-x^{2}}}{x^{2}}\,dx.$
+
+\bigskip\pause
+
+\newhead{Example} Find the area enclosed by the ellipse
+\[\frac{x^2}{a^2}+\frac{y^2}{b^2}=1.\]
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Evaluate $\int\frac{x}{\sqrt{x^{2}+4}}\,dx$.
+
+
+\bigskip\pause
+
+\newhead{Example} Evaluate $\int \frac{1}{x^{2}\sqrt{x^{2}+4}}\,dx$.
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Recall from last class}
+\label{tues}
+Here is a list of effective trigonometric substitutions.  Since these substitutions work when $x$ is one-to-one with respect to $\theta$, the table specifies the restricted range of $\theta$.\pause
+\noindent
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|c|c|c|}
+\hline
+Expression & Substitution & Range for $\theta$  \\
+\hline
+$\sqrt{a^2-x^2}$ & $x=a\sin\theta$ & $[-\frac{\pi}{2},\frac{\pi}{2}]$  \\
+$\sqrt{a^2+x^2}$ & $x=a\tan\theta$ & $(-\frac{\pi}{2},\frac{\pi}{2})$  \\
+$\sqrt{x^2-a^2}$ & $x=a\sec\theta$ & $[0,\frac{\pi}{2})\cup[\pi,\frac{3\pi}{2})$  \\
+\hline
+\end{tabular}
+\end{center}
+
+\bigskip\pause
+
+\newhead{Example} Evaluate $\int\frac{1}{\sqrt{x^{2} - a^{2}}}\,dx$, where $a>0$.
+\end{frame}
+
+\subsection{The method of partial fractions}
+
+\begin{frame}
+\frametitle{Integrating rational functions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\uncover<+->{\noindent In this section we consider the problem of integrating \emph{rational functions}.  It turns out that every rational function has an antiderivative (in terms of elementary functions), and there is a systematic way of finding this antiderivative.}
+
+\uncover<+->{\newhead{Terminology} }
+\begin{itemize}[<+->]
+\item $f$ is a \textit{rational function} if
+$f(x)=\dfrac{p(x)}{q(x)}$,
+where $p$ and $q$ are polynomials;
+\item $f$ is \textit{proper} if the \textbf{degree} of the denominator $q$ is greater than the \textbf{degree} of the numerator $p$;
+\item $f$ is \textit{improper} if the degree of the denominator $q$ is less than or equal to the degree of the numerator $p$;
+\item a quadratic polynomial is \textit{irreducible} if it has no real linear\\ factors. (Equivalently, a quadratic $ax^2+bx+c$ is irreducible if its discriminant $b^2-4ac$ is negative, so it has no real roots.)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\uncover<+->{\noindent Before articulating the general strategy for integrating a rational function, we revise some known tactics for integrating simpler examples.}
+
+\uncover<+->{\newhead{Example} Evaluate $\ds\int\frac{x}{x^2+2x+10}\,dx$.}
+\end{frame}
+
+\begin{frame}
+\newhead{The overall strategy}
+\begin{enumerate}[<+->]
+\item If the rational function is improper, then use polynomial division to write $f$ as the sum of a polynomial and a proper rational function. Since the polynomial is easy to integrate, we need only focus on integrating a proper rational function.
+\item It can be shown using algebra that every proper rational function $f$ can be written as a unique sum of functions of the form
+\begin{equation}\label{partial fractions}
+\frac{A}{(x-a)^k}\qquad\mbox{and}\qquad\frac{Bx+C}{(x^2+bx+c)^k},
+\end{equation}
+where the quadratic $x^2+bx+c$ is \textit{irreducible}. We call this sum the \textit{partial fractions decomposition} of $f$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{The overall strategy (contd.)}
+\begin{enumerate}[<+->]
+\addtocounter{enumi}{2}
+\item Now we only need to integrate functions of the form given by (1). By completing the square, using a substitution or performing simple algebraic manipulation, these can be integrated by the standard formulas:
+\begin{align*}
+\uncover<+->{\int x^{k}\,dx&=\frac{x^{k+1}}{k+1}+C,\qquad k\neq-1}\\
+\uncover<+->{\int\frac{g'(x)}{g(x)}\,dx&=\ln|g(x)|+C}\\
+\uncover<+->{\int\frac{1}{a^2+x^2}\,dx&=\frac{1}{a}\tan^{-1}\frac{x}{a}+C.}
+\end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Use long division to write the integrand as a polynomial plus a \emph{proper} rational function: \[\ds\int\frac{x^4-5x^3+12x^2-21x+35}{x^3-3x^2+4x-12}\,dx.\]
+\end{frame}
+
+\begin{frame}
+\newhead{Partial fractions decompositions} To find the partial fractions decomposition of a proper rational function $\frac{p}{q}$,  we express $q$ as a product of real linear factors and real irreducible quadratic factors.   The form of the partial fractions decomposition is determined by this factorization. There are four cases, depending on the type of factorization.
+
+\medskip\pause
+
+\noindent If we are dealing with a proper rational function $\dfrac{p(x)}{q(x)}$, the cases are (in increasing order of difficulty):
+\begin{enumerate}[<+->]
+\item $q(x)$ is a product of linear factors, none of which is repeated.
+\item $q(x)$ is a product of linear factors, some of which are repeated.
+\item $q(x)$ contains irreducible quadratic factors, none of which is repeated.
+\item $q(x)$ contains a repeated irreducible quadratic factor.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\noindent\underline{\textit{Case 1:} The denominator splits into distinct linear factors.}\pause\\
+Examples of two such rational functions and the form of their partial fractions decompositions are given below:\pause
+\begin{align*}
+\frac{x-3}{(x-1)(x-2)}&= {\frac{A}{x-1}+\frac{B}{x-2}}\\
+\frac{x^2-x+7}{x(2x+1)(x-3)}&= {\frac{A}{x}+\frac{B}{2x+1}+\frac{C}{x-3}}.
+\end{align*}\pause
+The constants $A$, $B$ and $C$ in each case can be determined using either of the following methods:\pause
+
+\newhead{Example} \\Find the partial fractions decomposition of $\ds\frac{7x-1}{x^2-2x-3}$.\pause\\
+\noindent \textbf{Step 1: Factor the denominator}
+
+\medskip\pause
+
+\noindent \textbf{Finding the coefficients: Method 1}
+
+\medskip\pause
+
+\noindent \textbf{Finding the coefficients: Method 2}
+\end{frame}
+
+\begin{frame}
+\noindent\underline{\textit{Case 2:} The denominator has a repeated linear factor.}\pause\\
+Examples of two such rational functions and the form of their partial fractions decompositions are given below:\pause
+\begin{align*}
+\frac{x^2+1}{(x+4)^3}&= {\frac{A}{x+4}+\frac{B}{(x+4)^2}+\frac{C}{(x+4)^3}}\\
+\frac{x^2-2}{(x-1)(x-2)^2}&= {\frac{A}{x-1}+\frac{B}{x-2}+\frac{C}{(x-2)^2}}.
+\end{align*}\pause
+Note carefully how the repeated factors appear on the right-hand side. The constants $A$, $B$ and $C$ in each case can be determined as in the previous example.\pause
+
+\newhead{Example} \\Find the partial fractions decomposition of $\ds\frac{x^2-3x+8}{x(x-2)^2}$.
+\end{frame}
+
+\begin{frame}
+\noindent\underline{\textit{Case 3:} The denominator has an irreducible quadratic factor.}\pause\\
+Examples of two such rational functions and the form of their partial fractions decompositions are given below:\pause
+\begin{align*}
+\frac{x^2+x}{(x-1)(x^2+9)}&= {\frac{A}{x-1}+\frac{Bx+C}{x^2+9}}\\
+\frac{x^3-2x+4}{(x^2+5)(x^2+x+1)}&= {\frac{Ax+B}{x^2+5}+\frac{Cx+D}{x^2+x+1}}.
+\end{align*}\pause
+Note carefully how the irreducible quadratic appears on the right-hand side. As before, the constants $A$, $B$, $C$ and $D$ in each case can be determined by algebra.\pause
+
+\newhead{Example} \\Find the partial fractions decomposition of $\ds\frac{4x^2+2x+1}{(x+1)(x^2+x+1)}$.
+\end{frame}
+
+\begin{frame}
+\noindent\underline{\textit{Case 4:} The denominator has a repeated irreducible quadratic factor.}\pause\\
+This case rarely appears in first year mathematics courses because it is more computationally intensive. Nevertheless, for completeness the basic form of decomposition is illustrated below:\pause
+\begin{align*}
+\frac{x^2+x}{(x^2+9)^3}&= {\frac{Ax+B}{x^2+9}+\frac{Cx+D}{(x^2+9)^2}+\frac{Ex+F}{(x^2+9)^3}}\\
+\frac{x^3-2x+4}{(x-2)(x^2+x+1)^2}&= {\frac{A}{x-2}+\frac{Bx+C}{x^2+x+1}+\frac{Dx+E}{(x^2+x+1)^2}}.
+\end{align*}
+As before, the constants appearing in each example can be determined by algebra.
+\end{frame}
+
+\begin{frame}
+\noindent The next example tests our ability to generalize each of these cases to rational functions whose denominators have many factors of different types.\pause
+
+\newhead{Example}
+Write down the \textit{form} of partial fractions decomposition for the rational function given by
+\[\frac{4x^4-3x^2+x-9}{x^3(x-7)(x^2+3)^2(x^2+x+2)}.\]
+(We won't find the constant coefficients.)
+\end{frame}
+
+\begin{frame}
+\noindent The final example puts together everything we have learnt in this section.\pause
+
+\newhead{Example} Find
+\begin{enumerate}[<+->]
+\item[(a)] $\ds\int\frac{8x^3-12x^2-13x-5}{2x^2-3x-2}\,dx$
+\item[(b)] $\ds\int\frac{4x^2-15x+29}{(x-5)(x^2-4x+13)}\,dx$.
+\end{enumerate}
+\end{frame}
+
+\end{document}

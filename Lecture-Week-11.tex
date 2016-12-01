@@ -1,0 +1,430 @@
+\documentclass[t]{beamer}
+\usetheme{Warsaw}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+\usepackage{beamerthemesplit}
+\mode<presentation>
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen}
+\usepackage{ifthen}
+\usepackage{animate}
+\usepackage{color}
+\usepackage{type1cm}  % used for watermarking
+\usepackage{eso-pic}  % used for watermarking
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines...
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 11:  Indeterminate forms, Techniques of integration}
+\date{October 15 -- October 19, 2012}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{2}
+\frame{\tableofcontents
+
+\begin{flushright}
+\hyperlink{tues}{\beamergotobutton{Lecture 21}}
+\end{flushright} 
+}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\section{Indeterminate forms}
+
+\begin{frame}
+\frametitle{Recall from last class}
+
+\uncover<+->{\noindent The limits of the form $\frac{\infty}{\infty}$ (also called `\textit{indeterminate forms}') that we studied so far can be calculated using the standard trick of dividing the denominator through by the fastest growing term. } \uncover<+->{What about the following limits?
+\[\lim_{x\to\infty}\frac{e^x}{x} \qquad\qquad\qquad \ds\lim_{x\to\infty}\frac{\ln x}{x}\]}
+
+\uncover<+->{\noindent One way to solve this problem is to look at the derivatives. \\}\uncover<+->{If, for example we could verify that
+$\ds\lim_{x\to\infty}\frac{f'(x)}{g'(x)}=0$
+then this would suggest that the \textit{rate} of increase of $g$ is greater than that of $f$.}
+\uncover<+->{ This in turn would suggest that
+$\ds\lim_{x\to\infty}\frac{f(x)}{g(x)}=0.$
+In fact, this kind of intuitive reasoning is generally true!}
+\end{frame}
+
+\begin{frame}
+\begin{block}{L'H\^opital's rule}
+Suppose that $f$ and $g$ are differentiable functions, $a \in \mathbb{R}$, and $g'(x) \neq 0$, except possibly at $a$. Suppose also that either one of the two following conditions hold:
+\begin{itemize}[<+->]
+\item $f(x)\to0$ and $g(x)\to0$ as $x\to a$;
+\item $f(x)\to\pm\infty$ and $g(x)\to\pm\infty$ as $x\to a$.
+\end{itemize}
+\uncover<+->{If
+\[\limm{a}\frac{f'(x)}{g'(x)}\]
+exists or is $\pm \infty$, then
+\[\limm{a}\frac{f(x)}{g(x)}=\limm{a}\frac{f'(x)}{g'(x)}.\]}
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}
+\newhead{Remarks}
+\begin{enumerate}[<+->]
+\item[(i)] The theorem also holds for limits at infinity or one-sided limits, That is,  as $x\to\infty$ or $x\to-\infty$, or  $x\to a^+$ or as $x\to a^-$.
+\item[(ii)] When using L'Hospital's Rule, we \textbf{do not} use the quotient rule.  We differentiate the numerator and the denominator \textbf{separately}.
+\item[(iii)] Be sure to verify that the hypotheses in L'Hospital's rule are satisfied before applying it!  We will see some examples of how things can go wrong if L'Hospital's rule is incorrectly used.
+\item[(iv)](non-assessable) The proof involves a more general version of the mean value theorem.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Examples} Now we will do a lot of examples!  Find the following limits:
+\begin{enumerate}[<+->]
+\item[(a)] $\limm{\infty}\ds\frac{e^{x}}{x}$.
+
+\vspace*{.3cm}
+
+\item[(b)] $\limm{1}\ds\frac{\ln x}{x-1}$.
+
+\vspace*{.3cm}
+
+\item[(c)] $\limm{\infty}\ds\frac{e^{x}}{x^{2}}$.
+
+\vspace*{.4cm}
+
+\item[(d)] $\limm{\infty}\ds\frac{\ln x}{\sqrt[3]{x}}$.
+
+\vspace*{.3cm}
+
+\item[(e)] $\limm{0}\ds\frac{\tan x - x}{x^{3}}$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{More Examples} Find the following limits:
+\begin{enumerate}[<+->]
+\item $\limm{\pi^{-}}\ds\frac{\sin x}{1 - \cos x}$.
+\vspace*{.4cm}
+\item $\limm{\infty} \ds\frac{x + \sin x}{x}$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Indeterminate forms with products}
+\noindent Suppose $\limm{a}f(x) = 0$ and $\limm{a}g(x) = \infty$, then what is $\limm{a}f(x)g(x)$?  This is called an indeterminate form of type $0\cdot\infty$.  We apply L'Hospital's rule after first writing $fg = \frac{f}{1/g}$ or $fg = \frac{g}{1/f}$.\pause
+
+\medskip 
+
+\newhead{Example} Evaluate $\limm{0^{+}}x\ln x$.
+\end{frame}
+
+\begin{frame}
+\newhead{Indeterminate forms with differences}
+\noindent Now consider what happens if $\limm{a}f(x) = \infty$ and $\limm{a}g(x) = \infty$, and we are looking at $\limm{a}[f(x) - g(x)]$.  This is an indeterminate form of type $\infty - \infty$.  We examine these by converting them into a quotient and using L'Hospital's rule.\pause
+
+\medskip
+
+\newhead{Example} Evaluate $\limm{(\frac{\pi}{2})^{-}}(\sec x - \tan x).$
+\end{frame}
+
+\begin{frame}
+\newhead{Indetermininate forms with powers}
+
+\noindent Some limits involving powers are difficult to calculate because the variable is in both the base and the index. By taking the natural logarithm, the power is transformed into a product, and the problem becomes manageable.\pause
+
+\newhead{Example} Evaluate $\limm{0^{+}}(1+\sin 4x)^{\cot x}$
+\end{frame}
+
+\section{Integration techniques}
+
+\begin{frame}
+\frametitle{Applications of integration}
+\noindent Integration has many applications.  We have seen how integration is used in
+\begin{itemize}[<+->]
+\item calculating the area of a region,
+\item finding the average value of a function,
+\item defining the natural log and exponential function.
+\end{itemize}
+\uncover<+->{Some more applications of integration (some of which may be covered in Math 1014) are:}
+\begin{itemize}[<+->]
+\item calculating the volume or surface area of a solid,
+\item calculating the length of a curve,
+\item calculating the work done by a varying force,
+\item finding the centre of gravity of an object.
+\end{itemize}
+\end{frame}
+
+\subsection{Integration by parts}
+
+\begin{frame}
+\frametitle{Integration by parts}
+\noindent To differentiate the product of two functions we use the product rule; reversing this process gives
+\textit{integration by parts}:\pause
+
+\vfill
+
+\newhead{Integration by parts formula}
+\[\int f(x)g'(x)\,dx = f(x)g(x) - \int g(x)f'(x)\,dx \]\pause
+If we let $u = f(x)$ and $v = g(x)$, so $du=f'(x)\,dx$ and $dv = g'(x)\,dx$, we obtain an equivalent (perhaps easier to memorize) formula:
+\[\int u\, dv = uv - \int v \, du.\]
+The idea is to choose $u$ and $v$ in such a way that the integral on the right is easier to evaluate than the integral on the left.
+\end{frame}
+
+\begin{frame}
+\newhead{Examples} 
+
+\begin{enumerate}[<+->]
+\item Evaluate $ \int x e^{x} \, dx.$
+
+\medskip
+
+\item Evaluate $ \int \ln x \, dx.$
+
+\medskip
+
+\item Evaluate $\int t^{2}\sin t\, dt.$ 
+
+\medskip
+
+
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\label{tues}
+\frametitle{Recall from last class}
+\begin{block}{Integration by parts formula}
+\uncover<+->{\[\int f(x)g'(x)\,dx = f(x)g(x) - \int g(x)f'(x)\,dx \]}
+\uncover<+->{If we let $u = f(x)$ and $v = g(x)$, so $du=f'(x)\,dx$ and $dv = g'(x)\,dx$, we obtain an equivalent (perhaps easier to memorize) formula:
+\[\int u\, dv = uv - \int v \, du.\]}
+\end{block}
+\begin{enumerate}[<+->]
+\item Evaluate $\int e^{x}\sin x \, dx.$
+
+
+
+\item Evaluate $\int_{0}^{\pi^{2}} \sin \sqrt{x} \, dx.$
+\end{enumerate}
+
+\end{frame}
+
+\subsection{Trigonometric integrals}
+
+\begin{frame}
+\frametitle{Trigonometric integrals}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent Now we examine integrals of the form
+\begin{enumerate}[<+->]
+\item $\ds\int \sin^mx \cos^nx\,dx$
+\item $\ds\int \tan^mx \sec^nx\,dx$
+\end{enumerate}
+
+\vspace*{.5cm}
+
+\uncover<+->{\noindent There are some strategies to evaluating these integrals, but occasionally we must use some tricks and ingenuity.}
+
+\uncover<+->{\noindent We begin by looking at integrals involving powers of $\sin x$ and $\cos x$.}
+\end{frame}
+
+\begin{frame}
+\uncover<+->{\[ \ds\int \sin^mx \cos^nx\,dx.\]}
+\uncover<+->{There are two cases to consider.  The first case is if \textbf{at least one} of $m$ or $n$ is odd, and the second case is if \textbf{both} $m$ and $n$ are even.}
+
+
+\uncover<+->{\newhead{Integrals with an odd power of $\sin x$ \emph{or} an odd power of $\cos x$}} 
+\begin{itemize}[<+->]
+\item If there is an odd power of $\sin x$ (i.e. if $m$ above is odd), we save one factor of $\sin x$ and use $\sin^2x=1-\cos^2x$ to express the remaining factors in terms of $\cos x$. Then substitute $u=\cos x$.
+\item If there is an odd power of $\cos x$ (i.e. if $n$ above is odd), we save one factor of $\cos x$ and use $\cos^2x=1-\sin^2x$ to express the remaining factors in terms of $\sin x$. Then substitute $u=\sin x$.
+\item (If the powers of both $\sin x$ and $\cos x$ are odd, we may use either of the above strategies).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Evaluate $\ds\int\sin^3x\,dx$.\pause
+
+\vspace*{1cm}
+
+\newhead{Example} Evaluate $\ds\int\sin^2x\cos^3x\,dx$.
+\end{frame}
+
+\begin{frame}
+\uncover<1->{\newhead{Integrals where both powers of $\sin x$ and $\cos x$ are even}} \uncover<2->{ We use the half-angle identities}
+\begin{align*}
+\uncover<3->{\sin^2x&=\tfrac{1}{2}(1-\cos2x)\\
+\cos^2x&=\tfrac{1}{2}(1+\cos2x)} \\ 
+\uncover<4->{\intertext{and progressively lower the powers until the integral can be evaluated. Sometimes the identity}
+\sin x\cos x&=\tfrac{1}{2}\sin2x}
+\end{align*}
+\uncover<4->{is also helpful.}
+
+
+\uncover<5->{\newhead{Examples} }
+\begin{enumerate}
+\uncover<5->{\item Evaluate $\ds\int\cos^2x\,dx$.}
+\uncover<6->{\item Evaluate $\ds\int\sin^2\theta\cos^2\theta\,d\theta$.}
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\noindent We now look at integrals involving powers of $\tan x$ and $\sec x$, i.e.
+\[ \ds\int \tan^mx \sec^nx\,dx.\]\pause
+We consider, as above, two cases.  Unfortunately, they are not exhaustive (as in the case of integrals involving powers of $\sin x$ and $\cos x$). \pause 
+
+\newhead{Case 1: The integral involves an even power of $\sec x$} We save one factor of $\sec^2x$ and use $\sec^2x=1+\tan^2x$ to express the remaining factors in terms of $\tan x$. Then substitute $u=\tan x$.\pause
+
+\newhead{Case 2: The integral involves an odd power of $\tan x$} We save one factor of $\sec x\tan x$ and use $\tan^2x=\sec^2x-1$ to express the remaining factors in terms of $\sec x$. Then substitute $u=\sec x$.
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Evaluate $\ds\int\tan^8x\sec^4x\,dx$.\pause
+
+
+\bigskip
+
+\newhead{Example} Evaluate $\ds\int\tan^5\theta\sec^8\theta\,d\theta$.
+\end{frame}
+
+\begin{frame}
+\newhead{Other integrals involving powers of $\sec$ and $\tan$} In other cases, the guidelines are not as clear cut. We may need to use identities, integration by parts and sometimes a little ingenuity. \pause The following indefinite integrals are also useful:
+\begin{align*}
+\int\tan x\,dx&=\ln|\sec x|+C\\
+\int\sec x\,dx&=\ln|\sec x+\tan x|+C
+\end{align*}\pause
+
+\bigskip
+
+\newhead{Example} Find $\int \sec^{3}x\,dx$.
+\end{frame}
+
+
+\end{document}

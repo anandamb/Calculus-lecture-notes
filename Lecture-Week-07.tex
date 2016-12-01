@@ -1,0 +1,473 @@
+\documentclass[t]{beamer}
+\usetheme{Warsaw}
+\usepackage{array}
+%\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+\usepackage{beamerthemesplit}
+\mode<presentation>
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen}
+\usepackage{ifthen}
+\usepackage{animate}
+\usepackage{color}
+\usepackage{type1cm}  % used for watermarking
+\usepackage{eso-pic}  % used for watermarking
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines....
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 7:  Fundamental Theorem of Calculus}
+\date{September 3 -- September 7, 2012}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{2}
+\frame{\tableofcontents
+
+\begin{flushright}
+\hyperlink{tues}{\beamergotobutton{Lecture 14}}
+\end{flushright} 
+}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\begin{frame}
+%\frametitle{Recall from last class}
+\newhead{Comparison properties of the integral}
+
+\noindent Suppose that $a \leq b$.
+
+\begin{enumerate}[<+->]
+\item If $f(x)\geq0$ for all $x$ in $[a,b]$ then $\ds \int_a^b f(x)\,dx\geq0$.
+
+\vspace*{.3cm}
+
+\item If $f(x)\leq g(x)$ for all $x$ in $[a,b]$ then
+\[\ds \int_a^b f(x)\,dx\leq\int_a^b g(x)\,dx.\]
+
+\vspace*{.3cm}
+
+\item If $m\leq f(x)\leq M$ for all $x$ in $[a,b]$ then
+\[m(b-a)\leq \int_a^b f(x)\,dx \leq M(b-a).\]
+
+
+\vspace*{.3cm}
+
+\item If $|f|$ is integrable on $[a,b]$ then
+\[\left|\int_a^bf(x)\,dx\right|\leq\int_a^b|f(x)|\,dx.\]
+\end{enumerate}
+\end{frame}
+
+\section{Fundamental Theorem of Calculus}
+\begin{frame}
+\frametitle{Functions defined by an integral}
+
+\noindent Before we discuss the Fundamental Theorem of Calculus, we introduce the notion of a function \emph{defined by an integral}.\pause  
+
+\noindent Suppose we start with a continuous function $f$ defined on the interval $[a,b]$, and we define a new function $g$ on $[a,b]$ via the rule
+\[ g(x) = \int_{a}^{x}f(t)\,dt.\]\pause 
+For example, $g(a) = \int_{a}^{a} f(t)\,dt = 0$, and $g(b) = \int_{a}^{b}f(t)\,dt$.  If $f$ is positive, then $g(x)$ can be interpreted as the area under the graph of $f$ from $a$ to $x$, the ``area so far'' function.
+\end{frame}
+
+\subsection{FTC and applications}
+\begin{frame}
+\begin{theorem}[Fundamental Theorem of Calculus]
+Suppose a function $f$ is continuous on $[a,b]$.
+\begin{enumerate}[<+->]
+\item If $g(x)=\ds\int^x_af(t)\,dt$ for $x\in [a,b]$, $g'(x)=f(x)$ for all $x\in (a,b)$.
+\item If $F$ is an antiderivative of $f$, then \[ \int_a^bf(x)\dx=F(b)-F(a). \]
+\end{enumerate}
+\end{theorem}
+\uncover<+->{\vspace*{-2mm}\newhead{Remark}  
+
+\noindent Note that part 1 says that if $f$ is integrated, then differentiated, we get the original function $f$.  Part 2 says that if we take a function $F$, differentiate it, then integrate the result, we get the original function $F$, but in the form $F(b) - F(a)$.  Together, the two parts say that differentiation and integration are \emph{inverse processes}.}
+\end{frame}
+
+\begin{frame}
+\newhead{Remarks on Part 1}
+\begin{itemize}[<+->]
+\item[(a)] Part 1 tells us that \emph{every} function defined by an integral is differentiable, and  $g'(x) = f(x)$.
+\item[(b)]  Also, \textit{every} continuous function $f$ on $(a,b)$ has an antiderivative $g$, where $g$ is defined as the integral of $f$ from $a$ to $x$.
+\end{itemize}
+\uncover<+->{\newhead{Examples}  Find the derivative of $g$, where $g$ is given by}
+\begin{enumerate}[<+->]
+\item[(i)] $g(x) = \int_{0}^{x}\sqrt{1 + t^{2}}\,dt.$
+\vspace*{.3cm}
+\item[(ii)] $g(x) = \int_{5}^{x}\sqrt{1 + t^{2}}\, dt.$
+\vspace*{.3cm}
+\item[(iii)] $g(x) = \int_{3}^{17}\sqrt{1+t^{2}}\,dt.$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\uncover<+->{\newhead{Remarks on Part 2}}
+\begin{enumerate}[<+->]
+\item[(a)] Note that the left hand side of the above equation is found by taking the limit of Riemann sums, which involves knowing the value of $f$ at \textbf{all} points between $a$ and $b$.  The right hand side, however, only requires knowing the value of $F$ at \textbf{two} points!
+
+\item[(b)] A common misconception is that this formula is the \emph{definition} of the definite integral.  It is not, the definition of integral is the limit of Riemann sums.  
+
+\item[(c)] We use the notation $F(x)\big|_{a}^{b} = F(b) - F(a)$.  Another common notation is $F(x)\big]_{a}^{b}$, which is used in the book.
+\item[(d)] When we apply the FTC, part 2, we may use \emph{any} antiderivative of $f$ (recall that if $F' = f$, the most general form for an antiderivative of $f$ is $F + C$, where $C$ is an arbitrary constant).
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\uncover<+->{\newhead{Remarks on Part 2}}
+\begin{enumerate}[<+->]
+\item[(e)] The FTC, part 2 is quite plausible from a physical perspective.  Recall that when we considered the ``Distance Problem'' several lectures ago, we determined that the area under the velocity curve was equal to the total distance travelled.  That is, if velocity and position are given by $v(t)$ and $s(t)$ respectively at time $t$, then $s'(t) = v(t)$, so $s$ is an antiderivative of $v$, and $\int_{a}^{b}v(t)\, dt = s(b) - s(a)$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\noindent Before we do some examples, we introduce the notion of an \textbf{indefinite integral}.  This is just a new notation and name for an antiderivative.\pause
+
+\begin{dfn} If $F'(x) = f(x)$, we write $\int f(x)\, dx = F(x)+C$ and call the symbol $\int f(x)\, dx$ the \textbf{indefinite integral} of $f$, and $C$ is called the \textbf{constant of integration}.\end{dfn}\pause
+
+
+\medskip
+\noindent Note that the definite integral is a \emph{number}, whereas the indefinite integral is a \emph{function}, or a \emph{family of functions}.  The Fundamental Theorem of Calculus, part 2 tells us that if $f$ is continuous on $[a,b]$, then $\int_{a}^{b}f(x)\, dx = (\int f(x)\,dx) \big|_{a}^{b}.$  Also note that an indefinite integral can represent either a particular antiderivative of $f$ or an entire family of antiderivatives.
+\end{frame}
+
+
+\begin{frame}
+\newhead{A table of indefinite integrals}\\
+In the following table, $c, C,$ and $k$ are arbitrary constants.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{| c | c |}
+\hline
+$f$ & $\int f(x)\,dx$ \\
+\hline
+$cf(x)$ & $c(\int f(x)\,dx)+C$ \\
+$f(x)\pm g(x)$ & $(\int f(x)\,dx) \pm (\int g(x)\,dx) +C$ \\
+$k$ & $kx + C$ \\
+$x^n$ (where $n\neq-1$) & $\ds\frac{x^{n+1}}{n+1}+C$ \\
+$\cos x$ & $\sin x+C$ \\
+$\sin x$ & $-\cos x+C$ \\
+$\sec^2 x$ & $\tan x+C$ \\
+$\sec x\,\tan x$ & $\sec x + C$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\newhead{Examples}
+\noindent Evaluate the following integrals:
+\begin{enumerate}[<+->]
+\item [(i)] $\int_{\pi}^{2\pi} \cos \theta \, d\theta$
+\vspace*{.2cm}
+\item[(ii)] $\int_{0}^{1}x(\sqrt[3]{x} + \sqrt[4]{x})\,dx$
+\vspace*{.2cm}
+\item[(iii)] True or False:
+$\int_{0}^{\pi} \sec^{2}x\,dx = \tan x\big|_{0}^{\pi} = 0.$
+\vspace*{.2cm}
+\item[(iv)] Find the indefinite integral: $\int (1-t)(2+t^{2}) \, dt$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Applications}
+
+\noindent Suppose $f$ is continuous on $[a,b]$ and $F$ is an antiderivative of $f$, that is, $F'=f$.  Then the FTC, part 2 can be rewritten as \[\int_{a}^{b}F'(x)\,dx = F(b) - F(a).\]  \pause
+
+\noindent We know $F'(x)$ is the rate of change of $y=F(x)$ with respect to $x$, and $F(b) - F(a)$ is the \emph{net} change in $y$ when $x$ changes from $a$ to $b$.  Thus the FTC part 2 says that the integral of a rate of change over an interval is the net change over that interval.\pause
+
+%\medskip
+\noindent For instance,
+\begin{enumerate}[<+->]
+\item If $V(t)$ is the volume of water in a tank at time $t$, then $V'(t)$ is the rate at which water flows into the tank at time $t$.  Hence $\int_{t_{1}}^{t_{2}}V'(t)\,dt = V(t_{2}) - V(t_{1})$ is the net change in the amount of water in the tank between times $t_{1}$ and $t_{2}$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Applications}
+
+\begin{enumerate}[<+->]
+\addtocounter{enumi}{1}
+\item If the rate of growth of a population is $\frac{dP}{dt}$, then $\int_{t_{1}}^{t_{2}}\frac{dP}{dt}\,dt = P(t_{2}) - P(t_{1})$, the net change in population during time $t_{1}$ to $t_{2}$.
+\item If an object has position function $s$ and velocity $v$, then $\int_{t_{1}}^{t_{2}}v(t)\,dt = s(t_{2}) - s(t_{1})$, the net change of position (or \emph{displacement}) of the particle during the period from $t_{1}$ to $t_{2}$.
+\end{enumerate}
+
+\end{frame}
+
+
+
+\begin{frame}[label=tues]
+\frametitle{Recall from last class}
+\begin{theorem}[Fundamental Theorem of Calculus]
+Suppose a function $f$ is continuous on $[a,b]$.
+\begin{enumerate}[<+->]
+\item If $g(x)=\ds\int^x_af(t)\,dt$ for $x\in [a,b]$, $g'(x)=f(x)$ for all $x\in (a,b)$.
+\item If $F$ is an antiderivative of $f$, then \[ \int_a^bf(x)\dx=F(b)-F(a). \]
+\end{enumerate}
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\frametitle{Examples}
+\uncover<+->{Find the derivative of $g$, where $g$ is given by}
+\begin{enumerate}[<+->]
+\item $g(x) = \ds\int_{1}^{x} \sqrt{1+t^3}\,dt.$
+\vspace*{.2cm}
+\item $g(x) = \ds\int_{1}^{x^{4}}\sec t \, dt.$
+\vspace*{.2cm}
+\item $g(x) = \ds\int_{2}^{\frac{1}{x}}\sin^{4}t \, dt.$
+\vspace*{.2cm}
+\end{enumerate}
+
+\begin{enumerate}[<+->]
+\addtocounter{enumi}{3}
+\item Evaluate the following integral:$$\int_{0}^{\frac{\pi}{4}}\frac{1+\cos^{2}\theta}{\cos^{2}\theta}\,d\theta$$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\uncover<+->{\newhead{Examples}}
+\begin{enumerate}[<+->]
+\item If $w'(t)$ is the rate of growth of a child in pounds per year, what does $\int_{5}^{10}w'(t)\,dt$ represent?
+\vspace*{.3cm}
+\item If oil leaks from a tank at a rate of $r(t)$ gallons per minute at time $t$, what does $\int_{0}^{120}r(t)\,dt$ represent?
+\vspace*{.2cm}
+\item A honeybee population starts with $100$ bees and increases at a rate of $n'(t)$ bees per week.  What does $100 + \int_{0}^{15}n'(t)\,dt$ represent?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Further Examples}
+\begin{enumerate}[<+->]
+\item[(a)] If $v(t) = 3t -5$ gives the velocity of a particle moving along a line, find the displacement and the total distance traveled by the particle during the time interval $0 \leq t \leq 3$.
+\medskip
+\item[(b)] Water flows from the bottom of a storage tank at a rate of $r(t) = 200 - 4t$ liters per minute, where $0\leq t \leq 50$.  Find the amount of water that flows from the tank during the first $10$ minutes.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{The average value of a function}
+
+\noindent The average value of finitely many numbers $y_1,y_2,\ldots,y_n$ is given by
+\[y_{\mathrm{ave}}=\frac{y_1+y_2+\ldots+y_n}{n}.\]
+ In general, how do we calculate the average value of a function $y = f(x)$, where $a \leq x \leq b$?\pause
+%
+
+\begin{dfn} Suppose that $f$ is continuous on $[a,b]$. Then the \textit{average value} $f_{\mathrm{ave}}$ of $f$ on $[a,b]$ is defined by the formula
+\[f_{\textrm{ave}} = \frac{1}{b-a}\int_{a}^{b}f(x)\, dx.\]
+The average value is sometimes denoted by $\overline{f}$.\end{dfn}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The average value of a function}
+\newhead{Example} Find the average value of the function $f$ over $[-2,3]$, where
+\[f(x)=1+x^2.\]
+\end{frame}
+
+\begin{frame}
+\noindent Suppose that $T(t)$ is the temperature (in ${}^{\circ}$C) at time $t$ (in hours) and that $T_{\mathrm{ave}}$ is the average temperature on the time interval $[0,24]$. Is there a specific time $t_0$ in $[0,24]$ when the temperature $T(t_0)$ is equal to the average temperature $T_{\mathrm{ave}}$?  More generally, given a function $f$, is there a specific value $c$ for which $f(c)=f_{\mathrm{ave}}$?\pause
+
+\medskip
+
+\noindent The answer is yes!  This is called the mean value theorem for integrals.\pause
+
+\begin{theorem}[The Mean Value Theorem for integrals]
+If $f$ is continuous on $[a,b]$, then there exists a number $c$ in $[a,b]$ such that
+\[f(c) = f_{\textrm{ave}} = \frac{1}{b-a}\int_{a}^{b}f(x)\,dx,\]
+that is,
+\[ \int_{a}^{b}f(x)\,dx = f(c)(b-a).\]
+\end{theorem} 
+
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Find all numbers $c$ that satisfy the conclusion of the MVT for integrals when $f(x)=1+x^2$ and $[a,b]=[-2,3]$.
+\end{frame}
+
+\subsection{Evaluating integrals}
+\begin{frame}
+\frametitle{Integration by substitution}
+
+To apply the FTC, we need to be able to find antiderivatives.  Sometimes this is difficult, for instance, when we try to find the indefinite integral
+\[ \int 2x\sqrt{1 + x^{2}}\,dx.\]\pause
+However, there is a useful method called ``integration by substitution'' that we can apply.  We illustrate it with the above example.  \pause
+\medskip
+\noindent If we let $u = 1 + x^{2}$, then $du = 2x\, dx$.  Hence we may formally write
+\begin{align} \int 2x\sqrt{1+x^{2}}\,dx &= \int \sqrt{1+x^{2}}(2xdx) \nonumber  \\
+ &= \int \sqrt{u}\, du = \frac{2}{3}u^{3/2} + C \nonumber \\
+ &= \frac{2}{3}(x^{2}+1)^{3/2} + C \nonumber
+\end{align}
+
+%\noindent The book justifies this method further.
+\end{frame}
+
+\begin{frame}
+\frametitle{Integration by substitution}
+\begin{block}{The substitution rule}
+If $u = g(x)$ is a differentiable function whose range is an interval $I$ and $f$ is continuous on $I$, then
+\[ \int f(g(x))g'(x)\,dx = \int f(u)\,du.\]
+That is, \emph{it is permissible to work with $dx$ and $du$ after integral signs as if they are differentials}.
+\end{block}\pause
+
+\newhead{Examples}
+\begin{enumerate}[<+->]
+\item[(i)] Evaluate $\int \sqrt{2x +1}\,dx.$
+%\vspace*{3.5cm}
+\item[(ii)] Evaluate $\int \frac{x}{\sqrt{1-4x^{2}}}\,dx.$
+
+\item[(iii)] Evaluate $\ds\int_{1}^{2}\frac{1}{(3-5x)^{2}}\,dx.$
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Symmetries}
+\begin{block}{Symmetries}
+Suppose $f$ is integrable on $[-a,a]$, where $a>0$. Then
+\begin{enumerate}[<+->]
+\item If $f$ is even ($f(-x)=f(x)$), then \[\int_{-a}^af(x)\dx=2\int_0^af(x)\dx.\]
+\item If $f$ is odd ($f(-x)=f(x)$), then \[\int_{-a}^af(x)\dx=0.\]
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Midterm Review}
+\begin{enumerate}[<+->]
+\item[{\small \S3.7, \#46}] A car braked with a constant deceleration of $16\,ft/s^2$, producing skid marks measuring $200 ft$ before coming to a stop. How fast was the car travelling when the brakes were first applied?
+\medskip
+\item[{\small \S2.5, \#36}] Find the derivative of the function \[y=\sqrt{x+\sqrt{x+\sqrt{x}}}.\]
+\end{enumerate}
+\end{frame}
+
+\end{document}

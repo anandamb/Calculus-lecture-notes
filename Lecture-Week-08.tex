@@ -1,0 +1,394 @@
+\documentclass[t]{beamer}
+\usetheme{Warsaw}
+\usepackage{array}
+%\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+\usepackage{beamerthemesplit}
+\mode<presentation>
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen}
+\usepackage{ifthen}
+\usepackage{animate}
+\usepackage{color}
+\usepackage{type1cm}  % used for watermarking
+\usepackage{eso-pic}  % used for watermarking
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines...
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 8:  Inverse functions, differentiating inverse functions, the natural logarithm}
+\date{September 24 -- September 28, 2012}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{2}
+\frame{\tableofcontents
+
+\begin{flushright}
+%\hyperlink{tues}{\beamergotobutton{Lecture 14}}
+\end{flushright} 
+}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\begin{frame}
+\frametitle{Recall from last class}
+\begin{block}{The substitution rule}
+If $u = g(x)$ is a differentiable function whose range is an interval $I$ and $f$ is continuous on $I$, then
+\[ \int f(g(x))g'(x)\,dx = \int f(u)\,du.\]
+That is, \emph{it is permissible to work with $dx$ and $du$ after integral signs as if they are differentials}.
+\end{block}\pause
+
+\vspace*{.5cm}
+
+\newhead{Example}
+\begin{enumerate}[<+->]
+\item Evaluate $\ds\int_{1}^{2}\frac{1}{(3-5x)^{2}}\,dx.$
+\end{enumerate}
+\end{frame}
+
+\section{Inverse functions}
+
+\begin{frame}
+\frametitle{Inverse functions}
+\noindent Recall that we think of functions as machines that take inputs from the domain, do stuff with them, and give outputs. An important question is ``for a `machine' $f$, when does there exist a `machine' $g$ that undoes $f$?".  If such a $g$ exists, we call it the inverse of $f$.  \pause
+
+\vspace*{.5cm}
+
+\newhead{Example} Suppose $f$ is a function such that $f(0)=0$ and $f(1)=0$. Is there a function $g$ that undoes $f$?
+\end{frame}
+
+\begin{frame}
+\frametitle{One-one functions}
+\begin{dfn} A function $f$ is said to be \textbf{one-to-one} if it doesn't attain the same value twice.  That is, \[\text{ if } x_{1} \neq x_{2}, \textrm{ } \text{ then } f(x_{1}) \neq f(x_{2}) \]
+for any $x_1,x_2\in\Dom(f)$.\end{dfn}\pause
+
+\medskip
+
+\noindent In other words, a function is one-to-one if every output corresponds to a unique input. \pause
+
+\vspace*{.2cm}
+
+\noindent Graphically, $f$ is one-to-one if and only if no horizontal line intersects its graph more than once (this is called the \emph{horizontal line test}, compare this with the \emph{vertical line test} to test if $f$ is a function in the first place).  One-to-one functions are sometimes called \textbf{injective} functions.  
+\end{frame}
+
+\begin{frame}
+\frametitle{One-one functions}
+\newhead{True or false?} The following functions are injective:
+\begin{enumerate}[<+->]
+
+\item[(i)] $f$ given by $f(x) = x^{2}$.
+\vspace*{.5cm}
+
+\item[(ii)] $f$ given by $f(x) = x^{3}$.
+\vspace*{.5cm}
+
+\item[(iii)] $f$ given by $f(x) = x^{2}$ where the domain of $f$ is $x \geq 0$.
+\vspace*{.5cm}
+
+\item[(iv)] $f$ given by $f(x) = \sqrt{x}$.
+\vspace*{.5cm}
+
+\item[(v)] $f$ given by $f(x) = \cos(x)$.
+\vspace*{.5cm}
+
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inverse functions}
+\noindent One-to-one functions are exactly those that possess inverse functions! \pause
+
+\begin{dfn} Suppose $f$ is a function with domain $A$ and range $B$.  Then its \textbf{inverse function} $f^{-1}$ has domain $B$ and range $A$ and is defined by 
+\[ f^{-1}(y) = x \qquad \text{if and only if} \qquad f(x) = y\]
+for any $y$ in $B$.\end{dfn} \pause
+
+
+
+\newhead{Example} Suppose $f$ is defined by $f(x) = y = x^{3}$, so $f$ maps $x$ to $y$.  The inverse function of $f$ is given by $f^{-1}(x) = x^{1/3}$ because  
+\[ f^{-1}(y) = f^{-1}(x^{3}) = (x^{3})^{1/3} = x.\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Inverse functions}
+\newhead{Remarks}
+\begin{enumerate}[<+->]
+\item[(i)] If $f$ is not one-to-one, then $f^{-1}$ isn't uniquely defined.
+
+\item[(ii)] (important!) The $-1$ in $f^{-1}$ is \textbf{NOT} an exponent.  That is, $f^{-1}(x)$ is \textbf{NOT} equal to $\frac{1}{f(x)}$ in general.  For example, if $f(x) = x^{3}$ then what is $f^{-1}(8)$?  What is $\frac{1}{f(8)}$?  (However, we \emph{can} write $(f(x))^{-1} = \frac{1}{f(x)}$.)
+
+\item[(iii)] Since $f$ and $f^{-1}$ ``undo''  each other, we have the rules $f^{-1}(f(x)) = x$ for every $x$ in $A$, and $f(f^{-1}(y)) = y$ for every $y$ in $B$.  
+
+\end{enumerate}
+
+\vspace*{.2cm}
+
+\uncover<+->{\noindent So given $f$, how do we explicitly find the inverse function $f^{-1}$?  We first write $y = f(x)$, then try to solve for $x$ in terms of $y$, then at the end switch the variables $x$ and $y$ to express $f^{-1}$ as a function of $x$.}
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Find a formula for the inverse of the function $f$ given by the rule $f(x) = 2x^{3} + 3$.
+
+\vspace*{.8cm}\pause
+
+\noindent If $f$ has an inverse, notice that $f(a) = b$ if and only if $f^{-1}(b) = a$.  That is, $(a,b)$ is in the graph of $f$ if and only if $(b,a)$ is in the graph of $f^{-1}$.  Since the point $(b,a)$ is obtained from $(a,b)$ by reflecting about the line $y=x$, we get the graph of $f^{-1}$ by reflecting the graph of $f$ about the line $y=x$.
+
+\vspace*{.8cm}\pause
+
+\newhead{Example} Sketch the graph of $f$ and $f^{-1}$ if $f(x) = \sqrt{x-2}$.
+\end{frame}
+
+\subsection{Inverse functions and calculus}
+\begin{frame}
+\frametitle{Inverse functions and calculus}
+
+\noindent If a function $f$ is one-to-one then its inverse function $g$ is also one-to-one. What other properties of $f$ does its inverse function $g$ inherit?
+\begin{itemize}[<+->]
+\item If $f$ is continuous, will $g$ be continuous?
+\item If $f$ is differentiable, will $g$ be differentiable?
+\end{itemize}
+
+\uncover<+->{\noindent Intuitively, we expect that if the graph of $f$ is a curve with no breaks, then the graph of $f^{-1}$ should also be a curve with no breaks.  We have the following nice theorem:}
+
+\uncover<+->{\begin{theorem}
+If $f$ is a one-to-one continuous function defined on an interval, then its inverse function $f^{-1}$ is also continuous.
+\end{theorem} }
+%  (You should be aware that this theorem is true in the context of this class, but is not necessarily true in more general contexts).}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Inverse function theorem}
+\noindent Intuitively, we know that if $f$ is differentiable then  the graph has no kinks or vertical tangent lines.  If the graph of $f^{-1}$ is obtained by reflecting about the line $y=x$, then if the graph of $f$ has no kinks, then neither will the graph of $f^{-1}$.  The only way to get vertical tangent lines to the graph of $f^{-1}$ is if there are horizontal tangent lines to the graph of $f$. This motivates the following important theorem.  \pause
+
+\vspace*{.5cm}
+
+\begin{theorem}[The inverse function theorem]
+Suppose $f$ is a one-to-one differentiable function with inverse function $f^{-1}$ and $f'(f^{-1}(a)) \neq 0$, then the inverse function is differentiable at $a$ and
+\[ (f^{-1})'(a) = \frac{1}{f'(f^{-1}(a))}.\]
+\end{theorem}
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Inverse function theorem}
+\newhead{Remark} 
+\begin{itemize}[<+->]
+\item Note that this theorem tells you both that the inverse function \textbf{is} differentiable at the point $a$, and also gives you an easy formula to calculate its value.
+\end{itemize}
+
+\vspace*{.8cm}
+
+\uncover<+->{\newhead{Example} If $f(x) = 2x + \cos x$, find $(f^{-1})'(1)$.}
+\end{frame}
+
+\section{The natural logarithm}
+
+\begin{frame}
+\frametitle{The natural logarithm}
+\noindent We now introduce a function of fundamental importance.  We will define the natural logarithm using an integral!  \pause
+
+
+\noindent We motivate our definition by considering the following problem:\pause
+
+%\vspace*{.5cm}
+\medskip
+
+\noindent The volume of a colony of bacteria on a plate is $1$ cubic millimeter and doubles every day. Let $V(t)$ denote the volume of bacteria after $t$ days. It is clear that
+\[V(0)=1,\quad V(1)=2, \quad V(2)=4,\quad V(3)=8\]
+and so on. In general, $V(t)=2^t$ if $t$ is a nonnegative integer.\pause
+
+\vfill
+\newhead{Question} Can we graph $V(t)=2^t$ if $t\in\RR$?\\ Only if we have defined $2^t$ when $t\in\RR$.
+\begin{itemize}[<+->]
+\item What is $2^{3/7}$?
+\item What is $2^{\sqrt{3}}$?
+\item What is $2^{\pi}$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{The natural logarithm}
+\noindent There is lots of work to be done here before we can draw the graph of $V$. At the moment we only have the following: If $b$ is a positive real number and $r$ is a rational number with $r=p/q$ then $b^r$ is defined to be the unique positive $q$th root of $b^p$. We do not yet have a definition for $b^r$ when $r\notin\Q$.\pause
+
+\smallskip
+
+\noindent Our strategy for improving this situation is the following.
+\begin{enumerate}[<+->]
+\item Define the natural logarithm function $\ln$ as a function from $(0,\infty)$ to $\mathbb{R}$ using an integral formula.
+\item Define the exponential function $\exp = e^{x}$, from $\mathbb{R}$ to $(0, \infty)$ as the inverse of $\ln$.
+\item Define $b^r$ when $r\notin\Q$ using the $\exp$ and $\ln$ functions.
+\end{enumerate}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The natural logarithm}
+\begin{dfn} The function $\ln$ with domain $(0,\infty)$ is defined by the formula
+\[\ln(x)=\int_1^x\frac{1}{t}\,dt.\]\end{dfn}\pause
+
+\vspace*{.3cm}
+\noindent By interpreting $\ln$ as the area under a curve, we can see that:
+\begin{itemize}[<+->]
+\item $\ln x>0$ if $x>1$ and $\ln1=0$,
+\item $\ln x<0$ if $0<x<1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{The natural logarithm}
+\noindent By the Fundamental Theorem of Calculus, part 1, we see that
+\[ \frac{d}{dx}(\ln x) = \frac{d}{dx} \int_1^x\frac{1}{t}\,dt = \frac{1}{x}.\]\pause
+
+\medskip
+
+\noindent This implies the following (familiar) properties of the logarithm:
+\begin{enumerate}[<+->]
+\item[(i)] $\ln(xy)=\ln(x)+\ln(y)$ for all positive real numbers $x$ and $y$.
+\item[(ii)] $\ds \ln\big(\tfrac{x}{y}\big)=\ln(x)-\ln(y)$ for all positive real numbers $x$ and $y$.
+\item[(iii)] $\ln(x^r)=r\ln(x)$ whenever $r$ is a rational number and $x$ is a positive real number.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{The natural logarithm}
+
+\newhead{Example} Expand the expression $\ln \frac{(x^{2} + 5)^{4}\sin x}{x^{3}+1}$.
+\end{frame}
+
+\end{document}

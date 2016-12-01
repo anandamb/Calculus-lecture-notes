@@ -1,0 +1,530 @@
+\documentclass[t]{beamer}
+\usetheme{Warsaw}
+\usepackage{array}
+%\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+\usepackage{beamerthemesplit}
+\mode<presentation>
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen}
+\usepackage{ifthen}
+\usepackage{animate}
+\usepackage{color}
+\usepackage{type1cm}  % used for watermarking
+\usepackage{eso-pic}  % used for watermarking
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines....
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 5:  Maxima and Minima, Mean Value Theorem}
+\date{August 20 -- August 24, 2012}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{2}
+\frame{\tableofcontents
+
+\begin{flushright}
+\hyperlink{tues}{\beamergotobutton{Lecture 10}}
+\end{flushright} 
+}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\section{Linear Approximation}
+\frame
+{
+\frametitle{Linear Approximation}
+We have, the slope of the tangent line of $f(x)$ at $x=a$ is given by
+\[ f'(a)=\lim_{h\to 0}\frac{f(a+h)-f(a)}{h} \] \pause
+When $h$ is very small, the slope of the secant line is very close to the slope of the tangent line. \pause That is,
+\[ f'(a)\sim\frac{f(a+h)-f(a)}{h}\quad\text{ for }h\text{ small.} \]\pause Thus, simplifying,
+\[ y=f(a+h)\sim f'(a)\cdot h +f(a). \] \pause
+For very small $h$, the curve almost coincides with the tangent line. Thus, the value of the tangent line at $x=a+h$
+gives an approximate value for $f(a+h)$. 
+}
+
+\frame
+{
+\frametitle{Linear Approximation}
+We could also write $$f(x) \sim f(a) + f'(a)(x-a).$$ This value is called the {\em linear approximation}  or \emph{tangent line approximation} or {\em linearization} of $f$ at $a$.  Be aware that we are just introducing three new names for a concept that we have already encountered!  \pause
+
+
+
+\newhead{Example} Estimate $\sqrt{16.001}$ without using a calculator.\pause
+
+\vfill
+
+
+
+\noindent You can use a calculator to see that the difference between the actual value of $\sqrt{16.001}$ and the approximation we just calculated is only (almost) $-.0000000195$!!!
+}
+
+\begin{frame}
+\frametitle{Differential Approximation}
+\uncover<+->{\newhead{The differential approximation} Suppose that $y=f(x)$ for some differentiable function $f$ and fix a point $a$ in $\Dom(f)$. A small change $x = a + dx$ from $a$ will produce a corresponding change $dy = f(a + dx) - f(a)$.  We call $dx$ the \emph{differential} of $x$, it is an independent variable.  We call $dy$ the \emph{differential} of $y$, it is a dependent variable.}
+
+\smallskip
+\uncover<+->{\noindent That is, since
+\[ f(x) - f(a) = f'(a)(x-a),\qquad \text{we have}\qquad dy = f'(a)dx \]
+whenever $dx$ is small. This is called the \textit{differential approximation}.}
+
+
+
+\uncover<+->{\newhead{Example} The radius of a sphere is measured as 45\,mm (to the nearest millimetre) and its volume is calculated. Estimate (i) the error and (ii) the percentage error for the calculated volume.}
+\end{frame}
+
+\section{Maxima and Minima}
+\begin{frame}
+\frametitle{Maximum and minimum values and critical points}
+
+\uncover<+->{\noindent Most optimization problems, such as the problem of finding the shape of a can that minimize the manufacturing cost, can be reduced to finding the maximum or minimum values of some function.}
+
+
+\uncover<+->{\begin{dfn}
+\begin{enumerate}[<+->]
+\item[(a)] A function $f$ has an \textit{absolute} or \textit{global maximum} at $c$ if $f(c)\geq f(x)$ for \textbf{all} $x\in\Dom(f)$. The number $f(c)$ is called the \textit{maximum value} of $f$ on $\Dom(f)$.  $f$ has an \textit{absolute} or \textit{global minimum} at $c$ if $f(c)\leq f(x)$ for \textbf{all} $x\in\Dom(f)$. The number $f(c)$ is called the \textit{minimum value} of $f$ on $\Dom(f)$.
+\item[(b)] A function $f$ has a \emph{local maximum} at $c$ if $f(c) \geq f(x)$ for $x$ \textbf{near} $c$, that is, $f(c) \geq f(x)$ for all $x$ in some open interval containing $c$.  Similarly $f$ has a \emph{local minimum} at $c$ if $f(c) \leq f(x)$ when $x$ is \textbf{near} $c$.
+\end{enumerate}
+\end{dfn}}
+\end{frame}
+
+\begin{frame}
+\newhead{True or False?}
+\begin{enumerate}[<+->]
+\item[(i)]$f(x) = x^{2}$ has \begin{itemize}\item  A local minimum at $x = 0$  \item A global minimum at $x = 0$ \item  A global maximum at $x = 100$ \item A local maximum at $x = 100$ \end{itemize}
+\item[(ii)] $f(x) = x^{3}$ has \begin{itemize}\item a global minimum (anywhere) \item a local minimum(anywhere) \item a global maximum (anywhere) \item a local maximum (anywhere) \end{itemize}
+\item[(iii)] $f(x) = \sin(x)$ has \begin{itemize} \item a local maximum at $x = \frac{\pi}{2}$ \item a global minimum at $x = \frac{3\pi}{2}$ \item a unique global maximum \item a unique local minimum \end{itemize}
+\item[(iv)] If a function has a local minimum, it must have a global minimum
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\noindent \textbf{\emph{So when does a function have a global maximum or minimum???}}\pause
+\[ \]
+\begin{theorem}[extreme value theorem] If $f$ is continuous on a closed interval $[a,b]$ then $f$ attains an absolute maximum value $f(c)$ and an absolute minimum value $f(d)$ at some points $c$ and $d$ in $[a,b]$.  (Note that $c$ and $d$ could very well be the endpoints of the interval!)
+\end{theorem} \pause
+\vfill
+
+\noindent The extreme value theorem tells us that a continuous function $f$ attains its max and min values on a closed interval, but it gives no systematic approach for finding them. We now address this problem.
+\end{frame}
+
+\begin{frame}
+\begin{theorem}[Fermat's Theorem] Suppose that $f$ is defined on $(a,b)$ and has a local maximum or minimum point at $c$ for some $c$ in $(a,b)$. If $f$ is differentiable at $c$ then $f'(c)=0$.
+\end{theorem}\pause
+
+
+\vspace*{.4cm}
+\newhead{Limitations of Fermat's Theorem} 
+\begin{enumerate}[<+->]
+\item The \emph{converse} to Fermat's theorem doesn't necessarily hold!  That is, there are functions that are differentiable at $c$ satisfying $f'(c) = 0$ but $f$ does \textbf{not} have a local maximum or minimum at $c$.
+\item Fermat's theorem only applies if $f$ is differentiable at $c$!  Can you think of an example of a function which has a local or global minimum at $c$ where $f$ is \textbf{not} differentiable at $c$?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\noindent Although Fermat's theorem doesn't always tell us exactly where local or global extrema are located, it does suggest that we should start searching for such extrema at the points $c$ where either $f'(c) = 0$ or where $f'(c)$ doesn't exist.\pause
+
+\begin{dfn} A \emph{critical point} of a function $f$ is a point $c$ in the domain of $f$ such that either $f'(c) = 0$ or $f'(c)$ doesn't exist.  (Note that the book uses the term ``critical number'' instead of ``critical point.'')\end{dfn}\pause
+
+\medskip
+\noindent Hence we can rephrase Fermat's theorem as ``\textbf{If $f$ has a local maximum or minimum at $c$, then $c$ is a critical point of $f$.}''
+\end{frame}
+
+\begin{frame}
+\newhead{Closed Interval Method} To find the absolute maximum and minimum values of a \textit{continuous} function $f$ on a \textit{closed} interval $[a,b]$:
+\begin{enumerate}[<+->]
+\item Find the values of $f$ at the critical numbers of $f$ in $(a,b)$.
+\item Find the values of $f$ at the endpoints of the interval.
+\item The largest value from Steps 1 and 2 is the absolute maximum value, while the smallest value is the absolute minimum value.
+\end{enumerate}
+
+\vspace*{3mm}
+\uncover<+->{\newhead{Example:} Find the absolute maximum and minimum values of the function $f(x) = x^{3} - 3x^{2} + 1$ when $-\frac{1}{2} \leq x \leq 4.$}
+\end{frame}
+
+\subsection{The Mean Value Theorem}
+\begin{frame}
+\frametitle{The Mean Value Theorem}
+
+\noindent The Mean Value Theorem (MVT) is one of the most important results for establishing the theoretical framework for calculus. Applications of the mean value theorem include
+\begin{itemize}[<+->]
+\item identifying where a function is increasing or decreasing,
+\item identifying different types of critical points,
+\item determining how many zeros a polynomial has,
+\item proving useful inequalities.
+\end{itemize}
+
+\vspace*{.1cm}
+\uncover<+->{First, we state the
+\begin{theorem}[Rolle's Theorem]
+Suppose $f$ is continuous on $[a,b]$, differentiable on $(a,b)$ and such that $f(a)=f(b)$. Then, there is a $c\in (a,b)$ such that $f'(c)=0$.
+\end{theorem}}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Mean Value Theorem}
+
+\uncover<+->{\begin{theorem}[The Mean Value Theorem]
+Let $f$ be a function that satisfies the following hypotheses:
+\begin{enumerate}
+\item $f$ is continuous on the closed interval $[a,b]$.
+\item $f$ is differentiable on the open interval $(a,b)$.
+\end{enumerate}
+Then there is a number $c$ in $(a,b)$ such that
+\[f'(c) = \frac{f(b) - f(a)}{b-a}, \quad \text{equivalently} \quad f(b) - f(a) = f'(c)(b-a).\]
+\end{theorem}}
+
+\uncover<+->{\newhead{Important application} If $f'(x) = 0$ for all $x$ in an interval $(a,b)$, then $f$ is constant on $(a,b)$.}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Mean Value Theorem}
+
+\uncover<+->{\newhead{Example} Suppose that $f(x)=x^2-4x+4$. Find a number $c$ in $(1,4)$ that satisfies the conclusions of the mean value theorem for $f$ on $[1,4]$.}
+
+\end{frame}
+
+\begin{frame}[label=tues]
+\frametitle{Recall from last class}
+\begin{theorem}[The Mean Value Theorem]
+Let $f$ be a function that satisfies the following hypotheses:
+\begin{enumerate}
+\item $f$ is continuous on the closed interval $[a,b]$.
+\item $f$ is differentiable on the open interval $(a,b)$.
+\end{enumerate}
+Then there is a number $c$ in $(a,b)$ such that
+\[f'(c) = \frac{f(b) - f(a)}{b-a}, \quad \text{equivalently} \quad f(b) - f(a) = f'(c)(b-a).\]
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\frametitle{Applications of the MVT}
+
+\noindent  In these examples, the information about a function $f$ is obtained from information about its derivative. This is a central feature of applications of the MVT.\pause
+
+
+\newhead{Example} Suppose that $f(0)=4$ and $f'(x)\leq 3$ whenever $x\in\RR$. How large can $f(2)$ possibly be?\pause
+
+\vspace*{3mm}
+
+
+
+\newhead{Example (Stewart 3.2.17)} Show that the equation 
+\[1 + 2x + x^{3} + 4x^{5} = 0\] has exactly one real root.
+\end{frame}
+
+\subsection{Derivatives and shapes of graphs}
+\begin{frame}
+\frametitle{The Sign of a Derivative}
+
+\uncover<+->{\noindent We have seen that the mean value theorem gives us a way to get information about a function $f$ from knowledge of its derivative $f'$.  In this section we will explore this connection further and learn an easy way to tell if a function is increasing or decreasing on an interval.}
+
+\uncover<+->{\newhead{Definition} Suppose that a function $f$ is defined on an interval $I$. We say that}
+\begin{enumerate}[<+->]
+\item[a)] $f$ is (strictly) \textit{increasing} on $I$ if for every two points $x_1$ and $x_2$ in $I$,
+\[x_1<x_2\mbox{ implies that }f(x_1)<f(x_2);\]
+\item[b)] $f$ is (strictly) \textit{decreasing} on $I$ if for every two points $x_1$ and $x_2$ in $I$,
+\[x_1<x_2\mbox{ implies that }f(x_1)>f(x_2).\]
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Sign of a Derivative}
+
+\uncover<+->{\newhead{True or False?}}
+\begin{enumerate}[<+->]
+\item[(i)] $f(x) = x^{2}$ is increasing on the interval $(4, 10)$.
+%\vspace*{3cm}
+\item[(ii)] $f(x) = x^{3} + 4$ is decreasing on the interval $[-2, 2]$ 
+%\vspace*{3cm}
+\item[(iii)] $f(x) = \sin(x)$ is increasing on the interval $(0,\pi)$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Sign of a Derivative}
+\uncover<+->{\noindent We notice that when a function is increasing, the tangent lines to the graph have positive slope, and when a function is decreasing, the tangent lines to the graph have negative slope.}
+
+
+\uncover<+->{\newhead{Increasing/decreasing test} Suppose that $f$ is differentiable on an open interval $I$.}
+\begin{enumerate}[<+->]
+\item[(i)] If $f'(x)>0$ for all $x$ in $I$ then $f$ is increasing on $I$.
+\item[(ii)] If $f'(x)<0$ for all $x$ in $I$ then $f$ is decreasing on $I$.
+\end{enumerate}
+
+
+
+\uncover<+->{\newhead{Example}
+Where is $f(x) = 3x^{4} - 4x^{3} - 12x^{2} + 5$ increasing and where it is decreasing?}
+\end{frame}
+
+\begin{frame}
+\frametitle{The first derivative test}
+\uncover<+->{\noindent Recall that \textbf{if} $f$ has a local minimum or maximum at $c$, \textbf{then} $c$ is a critical point, but not every critical point gives rise to a local maximum or minimum.  However, we can now apply the preceding theorem to classify critical points to see whether $f$ attains a local maximum, minimum, or neither.}
+
+\uncover<+->{\newhead{Corollary (The first derivative test)}\\ Suppose that $c$ is a critical point of a continuous function $f$.}
+\begin{enumerate}[<+->]
+\item[(i)] If $f'$ is positive to the left of $c$ and negative to the right of $c$, then $f$ has a local maximum at $c$.
+\item[(ii)] If $f'$ is negative to the left of $c$ and positive to the right of $c$, then $f$ has a local minimum at $c$.
+\item[(iii)] If $f'$ does not change sign at $c$ then $f$ has neither a local maximum nor local minimum at $c$.\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\newhead{Example} Find and classify the critical points of the function $f$ whose derivative is given by
+\[f'(x)=(x-2)(x+6)(x-1)^2.\]
+\end{frame}
+
+\begin{frame}
+\frametitle{The Second Derivative and Concavity}
+
+\noindent The second derivative $f''$ measures the rate of change of $f'$.  We can use our knowledge of $f''$ to give us information not just about $f'$, but also about $f$ itself.\pause
+
+\newhead{Example} Consider the graphs  $y=x^{2}$ and $y=\sqrt{x}$ when $x>0$.  Notice that although both are increasing, one ``bends up'' and the other ``bends down''.  That is, the tangent lines to $x^{2}$ on this interval lie \emph{below} the graph of $x^{2}$ whereas the tangent lines to $\sqrt{x}$ lie \emph{above} the graph of $\sqrt{x}$.\pause
+
+
+
+\begin{dfn} If the graph of $f$ lies above all its tangents on an interval $I$ then it is called \emph{concave upward} on $I$.  If the graph of $f$ lies below all of its tangents on $I$ then it is called \emph{concave downward} on $I$.  A point $P$ on a curve $y=f(x)$ is called an \emph{inflection point} if $f$ is continuous there and the curve changes from concave upwards to concave downwards or vice versa.\end{dfn}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{The Second Derivative and Concavity}
+\noindent Here is an example of some inflection points on a graph:
+
+
+\begin{center}
+\begin{tikzpicture}[scale=.6]
+\draw[loosely dotted]  (-2,-4) grid (2,4);
+\draw[blue, thick, domain=-2:2] plot[id=cubic] function{(x**3)/2} node[right] {$y=x^3$};
+\draw[->] (-2.2,0) -- (2.2,0) node[right] {$x$};
+\draw[->] (0,-4.25) -- (0,4.25) node[above] {$y$};
+\foreach \x/\xtext in {1/1, 2/2,  -1/{-1}, -2/{-2}}
+    \draw[shift={(\x,0)}] (0pt,2pt) -- (0pt,-2pt) node[below] {$\xtext$};
+\foreach \y/\ytext in {1/2, 2/4,  -1/{-2}, -2/{-4}}
+    \draw[shift={(0,\y)}] (2pt,0pt) -- (-2pt,0pt) node[left] {$\ytext$};
+\draw[red, thick] (0,0) circle(1pt);
+\draw[red] (0,-.7) node[below right] {\emph{Inflection point}};
+\draw[red] (0.05,-0.1) -- (0.25,-1);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{The Second Derivative and Concavity}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[loosely dotted]  (-4,-2) grid (4,2);
+\draw[blue, thick, domain=-pi:3.6] plot[id=sin] function{sin(x)} node[right] {$y=\sin(x)$};
+\draw[->] (-4.2,0) -- (4.2,0) node[right] {$x$};
+\draw[->] (0,-2.25) -- (0,2.25) node[above] {$y$};
+\foreach \x/\xtext in {pi/{\pi}, -pi/{-\pi}, {pi/2}/{\frac{\pi}{2}}, {-pi/2}/{-\frac{\pi}{2}}}
+    \draw[shift={(\x,0)}] (0pt,2pt) -- (0pt,-2pt) node[below] {$\xtext$};
+\foreach \y/\ytext in {1/1, 2/2,  -1/{-1}, -2/{-2}}
+    \draw[shift={(0,\y)}] (2pt,0pt) -- (-2pt,0pt) node[left] {$\ytext$};
+\draw[red, thick] (0,0) circle(0.6pt);
+\draw[red] (0,-.4) node[below right] {\emph{Inflection point}};
+\draw[red] (0.05,-0.1) -- (0.1,-.6);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Second Derivative and Concavity}
+
+\uncover<+->{\noindent Notice that when a function is concave upward, the slopes of its tangent lines are increasing, and when a function is concave downward, the slopes of its tangent lines are decreasing.}
+
+
+\uncover<+->{\noindent  This suggests the following test, which can be proved with the mean value theorem.}
+
+\uncover<+->{\newhead{Concavity test} Suppose that $f$ is twice differentiable on an interval $I$.}
+\begin{enumerate}[<+->]
+\item[(i)] If $f''(x)>0$ for all $x$ in $I$ then the graph of $f$ is concave upward on $I$.
+\item[(ii)] If $f''(x)<0$ for all $x$ in $I$ then the graph of $f$ is concave downward on $I$.
+\item[(iii)] If $c\in I$ and $f''$ changes sign at $c$ then $c$ is a point of inflection for $f$.
+\end{enumerate}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Second Derivative and Concavity}
+
+\uncover<+->{\noindent The concavity test allows another method for classifying the critical points of a function $f$.}
+
+\uncover<+->{\newhead{The second derivative test} Suppose that a function $f$ is twice differentiable at $c$ and $f''$ is continuous at $c$.}
+\begin{enumerate}[<+->]
+\item[(i)] If $f'(c)=0$ and $f''(c)>0$ then $c$ is a local minimum point of $f$;
+\item[(ii)] If $f'(c)=0$ and $f''(c)<0$ then $c$ is a local maximum point of $f$.
+\end{enumerate}
+\smallskip
+\uncover<+->{\noindent (Unfortunately, notice that this test says nothing about what happens when $f''(c)=0$ or when $f''(c)$ doesn't exist.  In these cases, try using the first derivative test.  In fact, the first derivative test is often easier to use.)}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Second Derivative and Concavity}
+\newhead{Example} Sketch the graph of $f$, showing local maximum, local minimum and inflection points, where
+\[f(x)=-2x^3+9x^2+60x-7 \qquad\forall x\in\RR\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Optimization Problems}
+
+\noindent We have already seen that an optimization problem may be reduced to finding the absolute maximum or minimum points of an appropriate function $f$ over some interval $I$. We already have techniques for doing this if $f$ is continuous and $I$ is closed. If either of these conditions fail, then one can try locating maxima and minima by graphing the function.\pause
+
+\smallskip
+
+\newhead{Example} A cylindrical can is to hold 1\,L of oil. Find the dimensions that will minimize the the cost of the metal to manufacture the can.
+\end{frame}
+
+\begin{frame}
+\frametitle{Curve Sketching}
+
+\uncover<+->{\noindent Information gleaned from the first and second derivatives of a function can be used to sketch the function's graph. Use the following list as a guide whenever sketching the graph $y=f(x)$ by hand. (Note that, depending on the function, not every item will be relevant or easy).}
+\begin{enumerate}[<+->]
+\item what is the \textit{domain} of $f$
+\item \textit{Intercepts:} \only<3>{\\(i) the $y$-intercept is $f(0)$\\(ii) the $x$-intercepts are found by solving $f(x)=0$}
+\item \textit{Symmetry:}\only<4>{\\ (i) $y$-axis symmetry (reflection) if $f(-x)=f(x)$\\ (ii) symmetry by rotation of $180^{o}$ about the origin if $f(-x)=-f(x)$\\ (iii) periodicity if $f(x+T)=f(x)$ for some number $T$}
+\item \textit{Asymptotes:}\only<5>{\\(i) $y=L$ is an horizontal asymptote if $\ds\lim_{x\to\infty}f(x)=L$ or $\ds\lim_{x\to-\infty}f(x)=L$\\(ii) $x=a$ is a vertical asymptote if $\ds\lim_{x\to a^{\pm}}f(x)=\pm\infty$ for one (or more) combination of $\pm$}
+\item \textit{Intervals of increase/decrease:} \only<6>{determined by computing $f'(x)$}
+\item \textit{Local maxima/minima:} \only<7>{determined by locating critical numbers and using the first (or second) derivative test}
+\item \textit{Concavity and points of inflection:} \only<8>{determined by the sign of $f''(x)$}
+\end{enumerate}
+
+\end{frame}
+
+
+\end{document}

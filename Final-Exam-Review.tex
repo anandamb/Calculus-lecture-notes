@@ -1,0 +1,242 @@
+\documentclass[10pt]{amsart}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+%\hypersetup{pdfpagemode=FullScreen}
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+%\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines...
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+%\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 13:  Final Exam Review Problems}
+\date{October 31 -- November 1, 2012}
+
+\begin{document}
+
+\maketitle
+
+\section{Limits and continuity}
+\begin{enumerate}
+\item Find $\limm{0}x^2\sin(1/x)$.
+
+\item Find $\limm{\infty}\frac{\sin x}{x}$.
+
+\item Show that the equation \[\sqrt[3]{x}=1-x \] has a solution in the interval $(0,1)$.
+
+\item Evaluate $\limm{\infty}\big(\sqrt{x^2+x}-\sqrt{x^2-x}\big)$.
+
+\item Find $\limm{\infty}\frac{x^2\sin x}{e^x}$.
+
+\item Either evaluate
+\[ \lim_{x\to\infty}\Big(e^x+1\Big)^{\tfrac{1}{x}} \]
+or state that the limit does not exist. Give reasons for your answer.
+
+\item Use l'Hospital's rule (or some other method) to find
+\[ \limm{0}\dfrac{1-\cos x}{\ln(1+x^2)}. \]
+\end{enumerate}
+
+\section{Derivatives}
+\begin{enumerate}
+\item Differentiate $\tan^{-1}(x^4) + \cos^{-1}(e^x)$.
+
+\item Differentiate $\ln (x^2 + e^{\cos x})$ and state for which values of $x$ the derivative is defined.
+
+\item Find the domain of the function
+\[ f (x) = \cos^{−1} (\ln x) + e^{\sin x} .\]
+Find the derivative of $f$ and state for what values of $x$ it is defined.
+
+\item Find the derivative of 
+\[ F(x)\int_0^{x^2}e^{\sin t}\,dt. \]
+
+\item Suppose that a function $f$ with domain $\mathbb{R}$ is defined by
+\[f (x) = \left\lbrace\begin{array}{cl}
+\dfrac{\sin x}{x} & \text{ if }x\neq 0\\
+1 & \text{ if }x= 0
+\end{array}\right.\]
+\begin{enumerate}
+\item Explain why $f$ is continuous on $\RR$.
+\item Is $f$ differentiable at $0$? Give reasons for your answer.
+\end{enumerate}
+
+\medskip
+
+\item The radius of a circle is measured to be $20 mm$ to the nearest millimetre. Using this
+measurement, the area of the circle is then calculated to be $400\pi mm^2$ . Use the differential
+approximation to estimate the maximum error for the calculated area of the circle.
+
+\item Differentiate $\cosh^2(3x-1)$.
+
+\item Compute the derivative of the function 
+\[ A(t)=\int_1^{\cosh t}\sqrt{x^2-1}\dx \quad \text{ for }t>0. \] Name any theorems that you use.
+\end{enumerate}
+
+\section{Integration}
+
+\begin{enumerate}
+\item Evaluate $\ds \int_0^1\dfrac{e^x}{1+e^{2x}}\dx$.
+
+\item Find $\ds\int_{-\pi/4}^{\pi/4}\dfrac{\sec^2x}{\sqrt{1-\tan^2x}}\dx$.
+
+\item Find $\ds\int x(\ln x)^2\dx$.
+
+\item Use the method of partial fractions to find
+$\ds\int \dfrac{x+2}{x^2 +x}\dx$.
+
+\item Suppose that \[ g(x)=\dfrac{1}{x^2+2x+5}.\]
+Calculate the average value of $g$ over the interval $[1, 3]$.
+
+\item Find \[ \int \tan^5x\sec^8x\dx. \]
+
+\item Use the formula $ \sin A\cos B = \dfrac{1}{2}\big(\sin(A+B)+\sin(A-B)\big)$
+to find \[ \int \sin(3x)\cos(x)\dx. \]
+
+\item Evaluate $\ds\int_0^1\dfrac{\tan^{-1}x}{x^2+1}\dx$. 
+\end{enumerate}
+
+\section{Inverse functions}
+
+\begin{enumerate}
+\item Find the domain of the function $f(x)=\tan(\cos^{-1}(x))$. Can you simplify it?
+
+\item Find the domain and range of the function
+\[ f(x)=\ln(\cos x). \]
+
+\item Find the domain and range of the function
+\[ f(x)=\sin^{-1}\Big(\dfrac{x}{|x|}\Big). \]
+
+\item If $\sinh x =\tfrac{3}{4}$, then find $\tanh x$.
+
+\item Consider the function $f$ with domain $\RR$ defined by $f(x)=x^5+5x^3+10x$.
+\begin{enumerate}
+\item Is the function one-to-one? Justify your answer.
+\item Compute the derivative $f^{-1}(t)$ at $t=0$.
+\end{enumerate}
+
+\end{enumerate}
+
+
+\end{document}

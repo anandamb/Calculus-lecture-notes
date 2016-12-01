@@ -1,0 +1,457 @@
+\documentclass[t]{beamer}
+\usetheme{Warsaw}
+\usepackage{array}
+%\usepackage{graphicx}
+\usepackage{amssymb,amsmath,mathrsfs,amsfonts}
+%\usepackage[colorhighlight,display]{texpower}
+%\usepackage{caption}
+%\usepackage[all]{xy}
+\usepackage{beamerthemesplit}
+\mode<presentation>
+%\usepackage{pause}
+\usepackage{ulem}  % for strikethroughs
+\usepackage{cancel} % for strikethroughs in math mode 
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=FullScreen}
+\usepackage{ifthen}
+\usepackage{animate}
+\usepackage{color}
+\usepackage{type1cm}  % used for watermarking
+\usepackage{eso-pic}  % used for watermarking
+
+
+\theoremstyle{plain}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{lem}[prop]{Lemma}
+\newtheorem{cor}[prop]{Corollary}
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{rem}[prop]{Remark}
+\newtheorem{ex}{Example}[section]
+%\newtheorem{note}{Note}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newcommand{\nin}{\noindent}
+\newcommand{\ds}{\displaystyle}
+\renewcommand{\figurename}{Figure \arabic{figure}}
+
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% some commands that have different meaning in the article/presentation modes
+
+\newcommand{\vvfill}{\mode<presentation>{\vfill}  \mode<article>{\medskip}}   %vfill in presentation only
+\newcommand{\sketchspace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Sketch:}} \vspace*{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\examplespace}{ 
+\mode<article>{ \medskip\noindent{\textbf{Example:}} \vspace{6cm} }
+\mode<presentation>{ } 
+}
+\newcommand{\artsmspace}{\mode<article>{\vspace*{2cm}} }  %small space in article mode
+\newcommand{\artlargespace}{\mode<article>{\vspace*{6cm}} }  %large space in article mode
+
+\newcommand{\dx}{\,dx}
+
+\newcommand{\soln}{{\textbf{Solution: }}\,\,\,}
+\newcommand{\disp}{\displaystyle}
+
+\newcommand{\makedate}{\vvfill
+\begin{picture}(10,10)  
+\put(260,-20){\mbox{\tiny{\today}}}
+\end{picture}
+}
+
+\newcommand{\pd}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\pD}[2]{\dfrac{\partial^2#1}{\partial#2^2}}
+\newcommand{\pdd}[3]{\dfrac{\partial^2#1}{\partial#2 \partial#3}}
+
+
+\normalem %stops the ulem package making all the emphs into underlines....
+ 
+ 
+ 
+ \newcommand{\refandrev}[2]{
+ \begin{small}
+  \hspace{6cm}
+  \begin{minipage}[r]{8cm}
+  Stewart,    Chapter #1   \\
+  Review:  \parbox[t]{6cm}{#2}
+\end{minipage}
+\end{small}
+}
+
+
+
+\newcounter{heading}
+\setcounter{section}{1}
+\setcounter{heading}{0}
+
+\newcommand{\makeheading}[1]{\medskip\begin{large}\noindent\textbf{{#1}}\end{large}\smallskip}
+
+%\newenvironment{head}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}{}
+\newcommand{\newhead}[1]{\medskip\stepcounter{heading}\noindent\textbf{\hspace{0.2cm}{#1}.}}
+
+
+\newcommand{\pf}[1]{\noindent\textit{Proof.}\vspace*{#1 cm}}
+\newcommand{\sol}[1]{\noindent\textit{Solution.}\vspace*{#1 cm}}
+\newcommand{\further}[1]{\begin{small}\noindent\textit{Further reading: #1}\end{small}}
+\newcommand{\exr}[1]{\begin{footnotesize}\noindent\textit{\textbf{Exercises:} Stewart #1}\end{footnotesize}}
+
+
+% Sets of numbers
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+
+% Partitions
+\newcommand{\PP}{\mathcal{P}}
+
+% Limits
+\newcommand{\limm}[1]{\displaystyle \lim_{x\to #1}}
+
+% Backslash
+\newcommand{\bs}{\backslash}
+
+% functions
+\newcommand{\cosec}{\mathrm{cosec}}
+\newcommand{\cosech}{\mathrm{cosech}}
+\newcommand{\sech}{\mathrm{sech}}
+\newcommand{\Li}{\mathrm{Li}}
+\newcommand{\si}{\mathrm{Si}}
+\newcommand{\erf}{\mathrm{erf}}
+
+% Domain and Range
+\newcommand{\Dom}{\mathrm{Dom}}
+\newcommand{\Codom}{\mathrm{Codom}}
+\newcommand{\Range}{\mathrm{Ran}}
+
+
+
+\title{Week 4:  Differentiation}
+\date{August 13 -- August 17, 2012}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\setcounter{tocdepth}{2}
+\frame{\tableofcontents
+
+\begin{flushright}
+\hyperlink{tues}{\beamergotobutton{Lecture 8}}
+\end{flushright} 
+}
+
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\section{Rules for differentiation}
+\begin{frame}
+\frametitle{Rules for differentiation}
+
+\noindent So far we have calculated derivatives working directly from the definition, that is, by taking the limit as $h \to 0$ of the difference quotient. However, in practice this is often both difficult and tedious.  Luckily, there exist some nice rules that make it quite easy to compute the derivatives of most functions we are familiar with.\pause
+
+\newhead{Some basic derivatives}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+$f(x)$					& $f'(x)$			\\
+\hline
+\uncover<2->{$C$, where $C$ is a constant}		& \uncover<2->{$0$}				\\
+\uncover<3->{$x^n$, where $n$ is a real number}	& \uncover<3->{$nx^{n-1}$}			\\
+\uncover<4->{$\sin x$}				& \uncover<4->{$\cos x$}			\\
+\uncover<4->{$\cos x$}				& \uncover<4->{$-\sin x$	}	\\
+\uncover<5->{$e^x$	}			& \uncover<5->{$e^x$} \\
+\uncover<5->{$\ln x$	}			& \uncover<5->{$\dfrac{1}{x}$}\\
+ & \\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sum, difference, and constant multiple rules}
+
+\uncover<+->{\noindent Suppose that $f$ and $g$ are differentiable at $x$ and $C$ is a real number. Then $f+g$, $f-g$ and $Cf$ are differentiable at $x$.  Moreover,}
+\begin{enumerate}[<+->]
+\item[(i)] $(f+g)'(x)=f'(x)+g'(x)$,
+\item[(ii)] $(f-g)'(x) = f'(x) - g'(x)$,
+\item[(iii)] $(C\cdot f)'(x)=C\cdot f'(x).$
+\end{enumerate}
+
+
+\uncover<+->{\newhead{True or false?}}
+\begin{enumerate}[<+->]
+\item[(i)] If $f(x) = \sin(x)$ and $g(x) = e^{x}$, then $(f+g)'(x) = \cos(x) + e^{x}$.
+
+%\vspace*{2cm}
+\item[(ii)] If $f(x) = x^{2},$ $g(x) = x^{-3}$, and $h(x) = x^{4}$, then\\ $(f+g+h)'(x) = 3x^{3}$.
+
+%\vspace*{2 cm}
+\item[(iii)] If $C = \pi$, then $\frac{d}{dx}(C^{2}) = 2\pi$.
+%\vspace*{2 cm}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{The product and quotient rules}
+
+\noindent If $f$ and $g$ are both differentiable, then 
+\begin{enumerate}[<+->]
+\item[(i)] $(fg)' = fg' + gf'$ \qquad (the \emph{product rule})
+\item[(ii)]$(\frac{f}{g})' =  \frac{gf' - fg'}{g^{2}}$ \qquad (the \emph{quotient rule}).
+\end{enumerate}
+\uncover<+->{\noindent That is, $fg$ is differentiable with derivative given by formula (i), and if $\frac{f}{g}$ is defined, then it is differentiable, with derivative given by formula (ii). \emph{Note that these formulas are not particularly intuitive!}
+
+\vspace*{.5 mm}
+\newhead{Examples}} 
+\begin{enumerate}[<+->]
+\item[(i)] Compute the derivative of $y = x^{2}\sin x$
+\vspace*{1mm}
+\item[(ii)] Compute the derivative of $F(x) = \dfrac{3x^{2} + 2\sqrt{x}}{x}.$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{The chain rule}
+
+\uncover<+->{\begin{thm} Suppose that $g$ is differentiable at the point $x$ and $f$ is differentiable at the point $g(x)$. Then $f\circ g$ is differentiable at $x$ and
+\[(f\circ g)'(x)=f'(g(x))g'(x).\]
+\end{thm}}
+
+\smallskip
+
+\uncover<+->{\noindent\textit{Remark:} Sometimes the chain rule is written as
+\[\frac{dy}{dx}=\frac{dy}{du}\cdot\frac{du}{dx}.\]
+While this is easier to remember, it omits some important information, namely the fact that $f'$ is evaluated at $g(x)$.
+}
+
+\uncover<+->{\newhead{Example} Suppose that $y=\sin(x^3+2x)$. Find $\dfrac{dy}{dx}$.}
+\end{frame}
+
+\begin{frame}
+\newhead{Examples}
+\begin{enumerate}[<+->]
+\item[(i)] Differentiate $y = (x^{3} - 1)^{100}$.
+
+\item[(ii)] Differentiate the function $g(t) = \big( \frac{t-2}{2t + 1}\big)^{9}$.
+
+\item[(iii)] If $f(x) = \sin(\cos(\tan x))$, what is $f'(x)$?
+
+\item[(iv)] Here is a table of values for $f, g, f', g'.$
+
+\begin{center}
+\begin{tabular}{ l l l l l}
+    \hline
+    $x$ & $f(x)$ & $g(x)$ & $f'(x)$ & $g'(x)$ \\ \hline
+    1 & 3 & 2 & 4 & 6\\ 
+    2 & 1 & 8 & 5 & 7\\ 
+    3 & 7 & 2 & 7& 9 \\
+    \hline
+    \end{tabular}\end{center}
+\noindent 
+\begin{enumerate}
+\item[(a)] If $h(x) = f(g(x))$, find $h'(1)$.
+\item[(b)] If $H(x) = g(f(x))$, find $H'(1)$.
+\end{enumerate}
+\end{enumerate}
+\end{frame}
+
+\frame
+{
+\frametitle{Recall from last class}
+\label{tues}
+\begin{enumerate}
+\item \textbf{Constant Rule}  $f(x) = c \Rightarrow   f'(x) = 0.$\\ \pause
+\item \textbf{Power Rule}  $f(x) = x^n    \Rightarrow   f'(x) = nx^{(n-1)},$  for any  $n\in \mathbb{R}$.\\ \pause
+\item \textbf{Scalar Multiplication Rule} $ (kf(x))' = kf'(x)$ for any $k\in \mathbb{R}$.\\ \pause
+\item \textbf{Sum/Difference Rule}  $[u(x)\pm v(x)]' = u'(x) \pm v'(x).$\\ \pause
+\item \textbf{Product Rule} $[u(x)v(x)]' = u'(x)v(x) + u(x)v'(x)$.\\ \pause
+\item \textbf{Quotient Rule} $\left[\dfrac{u(x)}{v(x)} \right]'= \dfrac{ u'(x)v(x) - u(x)v'(x)}{[v(x)]^2}$, when $v(x)\neq 0$. \\ \pause  
+\item {\bf Exponential Rule} If $f(x)=e^{ax}$, $f'(x)=ae^{ax}$. \\ \pause
+\item {\bf Logarithm Rule} if $f(x)=\ln x$, $f'(x)=\frac{1}{x}$, for $x\neq 0$.\pause
+\item \textbf{Chain Rule} If $h(x)=f\circ g(x)$ is the composition of two functions $f$ and $g$, then 
+\[
+h'(x) = f'[g(x)]\cdot g'(x).
+\]
+\end{enumerate}
+}
+
+\begin{frame}
+\uncover<+->{\noindent The following example cannot be solved using the rules for differentiation (why not?). We must work directly from the difference quotient.
+
+\newhead{Example}} \uncover<+->{Suppose that $f$ with domain $\RR$ is defined by
+\[
+f(x)=
+\begin{cases}
+x\sin\frac{1}{x}&\mbox{if }x\neq0\\
+0&\mbox{if }x=0.
+\end{cases}
+\]
+Determine whether or not $f$ is differentiable at $0$.}
+\vfill
+
+\uncover<+->{\newhead{Exercise} Is $
+f(x)=
+\begin{cases}
+x^2\sin\frac{1}{x}&\mbox{if }x\neq0\\
+0&\mbox{if }x=0
+\end{cases}
+$\\
+differentiable at $0$? }
+\end{frame}
+
+\section{Implicit differentiation}
+\begin{frame}
+\frametitle{Implicit differentiation}
+
+\noindent Many functions can be described by a rule of the form $y=f(x)$, i.e., one variable expressed explicitly in terms of another. However, sometimes it convenient or even necessary to define $f$ by an equation relating the variables $x$ and $y$.\pause
+
+\newhead{Example} The function $f$ with domain $[0,4]$ is defined by
+\[y=f(x),\qquad y\geq0, \qquad x^2+y^2=16.\]\pause
+
+\newhead{Example} The function $g$ with domain $(-a,a)$ is defined by
+\[y=g(x), \qquad y<0, \qquad \frac{x^2}{a^2}+\frac{y^2}{b^2}=1.\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Implicit differentiation}
+
+\uncover<+->{\noindent In other cases it may not be easy (or possible) to express $y$ explicitly as a function of $x$:}
+\begin{itemize}[<+->]
+\item spiral: \qquad$\ds\frac{1}{2}\ln(x^2+y^2)=\tan^{-1}\left(\frac{y}{x}\right)$
+\item heart: \qquad$(x^2+y^2-1)^3-x^2y^3=0$.
+\end{itemize}
+\uncover<+->{However, implicit differentiation gives a way of calculating the \\derivative $\frac{dy}{dx}$ \emph{without} expressing $y$ explicitly as a function of $x$.  It's easiest to see how to perform implicit differentiation by considering some examples.}
+
+\smallskip
+\uncover<+->{\newhead{Example} Suppose that $y$ is a function of $x$ and that
+\[4x^2+y^2=16.\]
+Calculate $\frac{dy}{dx}$.}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Implicit differentiation}
+
+\newhead{Example} Suppose that $y$ is a function of $x$, implicitly related by the equation
+\[y^4+x^3-x^2\sin(3y)=8.\]
+Find the equation of the tangent to the corresponding curve at the point where $(x,y)=(2,0)$.
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Related rates}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent Many physical processes involve quantities (such as temperature, volume, concentration, velocity) that change with time.  If $Q$ is a quantity that varies with time, then the derivative $\frac{dQ}{dt}$ gives the rate of change of that quantity with respect to time.\pause
+
+\smallskip
+
+\noindent Sometimes, changing one quantity will cause another quantity to change but perhaps at a different rate. For example, if the radius of a balloon changes, so too will the volume of the balloon, but their rates of change will be different.  It may be easier to measure the rate of change of the volume of the balloon compared to the rate of change of the radius.  Then we can use this measurement to determine the rate of change of the radius.  Such a problem is commonly called a \emph{related rates} problem.\pause
+
+\smallskip
+
+\noindent 
+The \textit{chain rule} and \textit{implicit differentiation} are often useful for solving problems involving two related rates of change.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Related rates}
+
+\newhead{Example (Stewart, Problem 2.7.9)} If a snowball melts so that its surface area decreases at a rate of $1\mathrm{ cm}^{2}/\mathrm{min}$, find the rate at which the diameter decreases when the diameter is $10$ cm.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Related rates}
+
+\newhead{Strategy for solving related rates problems (Stewart, p.129)}
+\begin{enumerate}[<+->]
+\item Read problem carefully 
+\item Draw a diagram if possible
+\item Introduce notation.  Assign symbols to all quantities that are functions of time.
+\item Express the given information and the required rate in terms of derivatives.
+\item Write an equation that relates the various quantities of the problem.  If necessary, use the geometry of the situation to eliminate one of the variables by substitution
+\item Use the chain rule to differentiate both sides of the equation with respect to $t$.
+\item Substitute the given information into the resulting equation and solve for the unknown rate.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Related rates}
+
+
+\newhead{Example (Stewart, Problem 2.7.13)} Two cars start moving from the same point.  One travels south at $60\mathrm{ mi}/\mathrm{h}$ and the other travels west at $25\mathrm{ mi}/\mathrm{h}$.  At what rate is the distance between the cars increasing two hours later?\pause
+
+\smallskip
+
+\newhead{Example (Stewart, Problem 2.7.25)} Gravel is being dumped from a conveyor belt at a rate of $30\mathrm{ft}^{3}/\mathrm{min},$ and its coarseness is such that it forms a pile in the shape of a cone whose base diameter and height are always equal.  How fast is the height of the pile increasing when the pile is $10$ ft high?
+\end{frame}
+
+\frame
+{
+\frametitle{Linear Approximation}
+We have, the slope of the tangent line of $f(x)$ at $x=a$ is given by
+\[ f'(a)=\lim_{h\to 0}\frac{f(a+h)-f(a)}{h} \] \pause
+When $h$ is very small, the slope of the secant line is very close to the slope of the tangent line. \pause That is,
+\[ f'(a)\sim\lim_{h\to 0}\frac{f(a+h)-f(a)}{h} \]\pause Thus, simplifying,
+\[ y=f(a+h)\sim f'(a)\cdot h +f(a). \] \pause
+For very small $h$, the curve almost coincides with the tangent line. Thus, the value of the tangent line at $x=a+h$
+gives an approximate value for $f(a+h)$. 
+}
+
+\frame
+{
+\frametitle{Linear Approximation}
+We could also write $$f(x) \sim f(a) + f'(a)(x-a).$$ This value is called the {\em linear approximation}  or \emph{tangent line approximation} or {\em linearization} of $f$ at $a$.  Be aware that we are just introducing three new names for a concept that we have already encountered!  \pause
+
+
+
+\newhead{Example} Estimate $\sqrt{16.001}$ without using a calculator.\pause
+
+\vfill
+
+
+
+\noindent You can use a calculator to see that the difference between the actual value of $\sqrt{16.001}$ and the approximation we just calculated is only (almost) $-.0000000195$!!!
+}
+
+\begin{frame}
+\frametitle{Differential Approximation}
+\uncover<+->{\newhead{The differential approximation} Suppose that $y=f(x)$ for some differentiable function $f$ and fix a point $a$ in $\Dom(f)$. A small change $x = a + dx$ from $a$ will produce a corresponding change $dy = f(a + dx) - f(a)$.  We call $dx$ the \emph{differential} of $x$, it is an independent variable.  We call $dy$ the \emph{differential} of $y$, it is a dependent variable.}
+
+\smallskip
+\uncover<+->{\noindent That is, since
+\[ f(x) - f(a) = f'(a)(x-a),\qquad \text{we have}\qquad dy = f'(a)dx \]
+whenever $dx$ is small. This is called the \textit{differential approximation}.}
+
+
+
+\uncover<+->{\newhead{Example} The radius of a sphere is measured as 45\,mm (to the nearest millimetre) and its volume is calculated. Estimate (i) the error and (ii) the percentage error for the calculated volume.}
+\end{frame}
+
+
+
+\end{document}
